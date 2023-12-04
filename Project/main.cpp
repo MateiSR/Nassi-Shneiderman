@@ -8,6 +8,8 @@
 /* Header files */
 #include "include/UI.h"
 #include "include/Constants.h"
+/* Definitions */
+#define INPUT_FILE "input.txt"
 
 using namespace std;
 
@@ -73,7 +75,7 @@ void analyzeCode(FILE *fptr, char rawCode[])
 
 int main()
 {
-    FILE *pseudocode = fopen("input.txt", "r");
+    FILE *pseudocode = fopen(INPUT_FILE, "r");
     if (!pseudocode)
     {
         printf("Could not open input code file");
