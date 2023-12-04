@@ -1,0 +1,28 @@
+/* If/else */
+if ()
+{
+}
+else if ()
+{
+}
+else
+{
+}
+/* While */
+while()
+{
+}
+/* Switch */
+switch(x)
+{
+    case '1': ...; break;
+    default: break;
+}
+/* Do While */
+do
+{
+} while ();
+/* For */
+for (;;)
+{
+}
