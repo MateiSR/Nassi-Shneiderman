@@ -1,0 +1,23 @@
+# depslib dependency file v1.0
+1701713020 source:e:\coding\cpp\nassi-shneiderman\project\main.cpp
+	<stdio.h>
+	<graphics.h>
+	<winbgim.h>
+	<string.h>
+	<test.h>
+
+1701710309 e:\coding\cpp\nassi-shneiderman\project\ui.h
+	<iostream>
+
+1701711300 e:\coding\cpp\nassi-shneiderman\project\uihandler.h
+	<graphics.h>
+	<winbgim.h>
+	<string.h>
+
+1701711385 source:e:\coding\cpp\nassi-shneiderman\project\uihandler.cpp
+	"UIHandler.h"
+	<winbgim.h>
+	<graphics.h>
+
+1701712023 e:\coding\cpp\nassi-shneiderman\project\headers\uihandler.h
+
