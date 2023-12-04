@@ -31,12 +31,29 @@ LineType getLineType(char codeLine[])
     else return otherStatement;
 }
 
+// Ia instructiune din parantezele unui statement
+void getInstruction (char rawCodeLine[], char rawInstruction[]) {
+    strcpy(rawInstruction, rawCodeLine);
+    char *firstP = strchr(rawInstruction, '(');
+    // Daca nu e instructiune valida, return
+    if (!firstP) {
+        rawInstruction[strlen(rawInstruction) - 1] = '\0'; // Se elimina '\n'
+        return;
+    }
+    strcpy(rawInstruction, firstP + 1);
+    // Se elimina ultima paranteza
+    rawInstruction[strlen(rawInstruction) - 2] = '\0';
+}
 
+// Parcurge codul linie cu linie si stabileste tipul de statement
 void analyzeCode(FILE *fptr, char rawCode[])
 {
+    unsigned short i = 0;
+    char rawInstruction[61] = "\0";
     while(fgets(rawCode,61,fptr)){
         lineType=getLineType(rawCode);
-        cout<<lineType<<endl;
+        getInstruction(rawCode, rawInstruction);
+        cout<<i++ << " (Type: " << lineType << ") " << rawInstruction << '\n';
     }
 
 }

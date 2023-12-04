@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1701724022 source:e:\coding\cpp\nassi-shneiderman\project\main.cpp
+	<iostream>
+	<graphics.h>
+	<winbgim.h>
+	<stdio.h>
+
