@@ -1,0 +1,19 @@
+int x = 5;
+while(x>3)
+{
+    x--;
+    cout<<x;
+}
+if(x==3)
+{
+    repeat
+    {
+        cout<<x;
+    }
+    until x==1
+}
+else
+{
+    cout<<x;
+}
+return 0;
