@@ -1,9 +1,21 @@
+/* Librarii predefinite */
 #include <iostream>
+#include <stdio.h>
 #include <graphics.h>
 #include <winbgim.h>
 #include <stdio.h>
+#include <string.h>
+/* Header files */
+#include "include/UI.h"
+#include "include/Constants.h"
+
 using namespace std;
 
+/* Function headers */
+void processFile(FILE *pseudocode);
+void run();
+
+// Tipuri de statement-uri posibile in pseudocod
 enum LineType
 {
     otherStatement = 0,
@@ -17,7 +29,7 @@ enum LineType
     braceEnd = 8
 } lineType;
 
-
+// Obtine tipul liniei curente
 LineType getLineType(char codeLine[])
 {
     if(strstr(codeLine,"if")) return ifStatement;
@@ -61,17 +73,27 @@ void analyzeCode(FILE *fptr, char rawCode[])
 
 int main()
 {
-    char rawCode[61];
     FILE *pseudocode = fopen("input.txt", "r");
     if (!pseudocode)
     {
-        printf("Could not open file");
+        printf("Could not open input code file");
         return -1;
     }
-    else
-    {
-        analyzeCode(pseudocode,rawCode);
-    }
+
+    // Process input file
+    processFile(pseudocode);
+    fclose(pseudocode);
+
+    run();
 
     return 0;
+}
+
+void processFile(FILE *pseudocode) {
+    char rawCode[61];
+    analyzeCode(pseudocode, rawCode);
+}
+
+void run() {
+    createWindow();
 }

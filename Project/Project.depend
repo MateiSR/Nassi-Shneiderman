@@ -1,7 +1,19 @@
 # depslib dependency file v1.0
-1701724022 source:e:\coding\cpp\nassi-shneiderman\project\main.cpp
+1701725487 source:e:\coding\cpp\nassi-shneiderman\project\main.cpp
 	<iostream>
+	<stdio.h>
 	<graphics.h>
 	<winbgim.h>
 	<stdio.h>
+	<string.h>
+	"include/UI.h"
+	"include/Constants.h"
+
+1701725296 e:\coding\cpp\nassi-shneiderman\project\include\ui.h
+	<graphics.h>
+	<winbgim.h>
+
+1701725516 e:\coding\cpp\nassi-shneiderman\project\include\constants.h
+	<graphics.h>
+	<winbgim.h>
 
