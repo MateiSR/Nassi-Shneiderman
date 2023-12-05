@@ -55,7 +55,7 @@ void generateWindowContent() {
 }
 
 // Draw if block in NS diagram
-void drawIfBlock(char *instruction, int top, int left, int blockSize = 60) {
+void drawIfStartBlock(char *instruction, int top, int left, int blockSize = 60) {
     int bottom = top + blockSize,
         right = MAX_WIDTH;
     rectangle(left, top, right, bottom);
@@ -67,6 +67,36 @@ void drawIfBlock(char *instruction, int top, int left, int blockSize = 60) {
     outtextxy(right - textwidth("FALSE") / 2, bottom, "FALSE");
     outtextxy(center, top + textheight(instruction), instruction);
 
+}
+
+// --- For, while, do while (<=> repeat until !) ---
+
+// Draw loop with initial test (eg. while) in NS diagram
+void drawLoopTestBefore(char *instruction, int top, int left, int blockSize = 200) {
+    int bottom = top + blockSize,
+    right = MAX_WIDTH;
+    rectangle(left, top, right, bottom);
+    rectangle(left + textheight(instruction), top + textheight(instruction), right, bottom);
+    int center = (left+right)/2;
+    outtextxy(center, top + textheight(instruction), instruction);
+}
+
+// Draw loop with final test(eg do while) in NS diagram
+void drawLoopTestAfter(char *instruction, int top, int left, int blockSize = 200) {
+    int bottom = top + blockSize,
+    right = MAX_WIDTH;
+    rectangle(left, top, right, bottom);
+    rectangle(left + textheight(instruction), top, right, bottom - textheight(instruction));
+    int center = (left+right)/2;
+    outtextxy(center, bottom, instruction);
+}
+
+// Draw for loop in NS diagram
+void drawForLoop(char *instruction, int top, int left, int blockSize = 200) {
+}
+
+// Draw main (rectangle) diagram border
+void drawDiagramBorder() {
 }
 
 
@@ -86,6 +116,8 @@ void createWindow() {
     initwindow(WIDTH, HEIGHT);
     setWindowTitle(TITLE);
     generateWindowContent();
+    drawLoopTestBefore("x <= 321", 300, 300);
+    // drawIfStartBlock("xxxx", 300, 300, 150);
     getch(); // Keep window open
     closegraph();
 }
