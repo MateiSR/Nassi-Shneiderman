@@ -51,6 +51,11 @@ void generateWindowContent() {
     */
 }
 
+// Draw if block in NS diagram
+void drawIfBlock(int xTopLeft, int yTopLeft) {
+    int
+}
+
 void createWindow() {
     initwindow(WIDTH, HEIGHT);
     setWindowTitle(TITLE);

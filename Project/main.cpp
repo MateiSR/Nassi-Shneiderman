@@ -45,6 +45,12 @@ LineType getLineType(char codeLine[])
     else return otherStatement;
 }
 
+// Block struct
+struct block {
+    LineType type;
+    int lineNum;
+};
+
 // Ia instructiune din parantezele unui statement
 void getInstruction (char rawCodeLine[], char rawInstruction[]) {
     strcpy(rawInstruction, rawCodeLine);
@@ -67,7 +73,7 @@ void analyzeCode(FILE *fptr, char rawCode[])
     while(fgets(rawCode,61,fptr)){
         lineType=getLineType(rawCode);
         getInstruction(rawCode, rawInstruction);
-        cout<<i++ << " (Type: " << lineType << ") " << rawInstruction << '\n';
+        cout<< i++ << " (Type: " << lineType << ") " << rawInstruction << '\n';
     }
 
 }
