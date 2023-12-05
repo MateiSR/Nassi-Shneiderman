@@ -48,6 +48,7 @@ LineType getLineType(char codeLine[])
 // Block struct
 struct block {
     LineType type;
+    char *rawLine;
     int lineNum;
 };
 
