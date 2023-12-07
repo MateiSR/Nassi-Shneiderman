@@ -45,6 +45,7 @@ LineType getLineType(char codeLine[])
     else return otherStatement;
 }
 
+// Block struct
 struct block
 {
     int lineNum;
