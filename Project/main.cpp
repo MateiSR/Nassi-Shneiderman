@@ -29,28 +29,44 @@ enum LineType
     forStatement = 6,
     braceBeggining = 7,
     braceEnd = 8
-} lineType;
+} ;
 
 // Obtine tipul liniei curente
 LineType getLineType(char codeLine[])
 {
-    if(strstr(codeLine,"if")) return ifStatement;
+    if(strstr(codeLine,"if(")) return ifStatement;
     else if(strstr(codeLine,"else")) return elseStatement;
-    else if(strstr(codeLine,"while")) return whileStatement;
+    else if(strstr(codeLine,"while(")) return whileStatement;
     else if(strstr(codeLine,"repeat")) return repeatUntilStatementBegin;
     else if(strstr(codeLine,"until")) return repeatUntilStatementEnd;
-    else if(strstr(codeLine,"for")) return forStatement;
+    else if(strstr(codeLine,"for(")) return forStatement;
     else if(strstr(codeLine,"{")) return braceBeggining;
     else if(strstr(codeLine,"}")) return braceEnd;
     else return otherStatement;
 }
 
+struct block
+{
+    int lineNum;
+    char rawLine[101];
+    char rawInstruction[101];
+    LineType lineType;
+};
+
+struct blockChain
+{
+    block Block[101];
+    unsigned int blockCount=0;
+} blockVector;
+
 // Ia instructiune din parantezele unui statement
-void getInstruction (char rawCodeLine[], char rawInstruction[]) {
+void getInstruction (char rawCodeLine[], char rawInstruction[])
+{
     strcpy(rawInstruction, rawCodeLine);
     char *firstP = strchr(rawInstruction, '(');
     // Daca nu e instructiune valida, return
-    if (!firstP) {
+    if (!firstP)
+    {
         rawInstruction[strlen(rawInstruction) - 1] = '\0'; // Se elimina '\n'
         return;
     }
@@ -58,20 +74,50 @@ void getInstruction (char rawCodeLine[], char rawInstruction[]) {
     // Se elimina ultima paranteza
     rawInstruction[strlen(rawInstruction) - 2] = '\0';
 }
-
+void addBlock(block newBlock)
+{
+    blockVector.blockCount++;
+    blockVector.Block[blockVector.blockCount]=newBlock;
+}
 // Parcurge codul linie cu linie si stabileste tipul de statement
 void analyzeCode(FILE *fptr, char rawCode[])
 {
-    unsigned short i = 0;
-    char rawInstruction[61] = "\0";
-    while(fgets(rawCode,61,fptr)){
-        lineType=getLineType(rawCode);
-        getInstruction(rawCode, rawInstruction);
-        cout<<i++ << " (Type: " << lineType << ") " << rawInstruction << '\n';
+    unsigned short line = 0;
+    block newBlock;
+    char rawInstructions[61] = "\0";
+    while(fgets(rawCode,61,fptr))
+    {
+        //Count the line
+        line++;
+        //Extract the instruction from the code
+        getInstruction(rawCode, rawInstructions);
+        //Create new block
+        newBlock.lineType=getLineType(rawCode);
+        strcpy(newBlock.rawLine,rawCode);
+        strcpy(newBlock.rawInstruction,rawInstructions);
+        newBlock.rawLine[strlen(newBlock.rawLine)-1]='\0';
+        newBlock.lineNum=line;
+        //If block is not a brace, add it to the block list
+        if(newBlock.lineType!=7&&newBlock.lineType!=8)
+        {
+            addBlock(newBlock);
+        }
+        else{ //else, check for validity of braces placed.
+            //paranteze1
+        }
+        cout<<rawCode<<' ';
     }
-
+    cout<<"Number of blocks: "<<blockVector.blockCount<<'\n';
+        for(int i=1; i<=blockVector.blockCount; i++)
+        {
+            cout<< "Block number "<<i<<": "<<blockVector.Block[i].rawLine<<", of Type: "<<blockVector.Block[i].lineType<<", situated at line: "<<blockVector.Block[i].lineNum<<'\n';
+        }
 }
 
+void deleteAllBlocks()
+{
+    blockVector.blockCount=0;
+}
 
 int main()
 {
@@ -91,11 +137,15 @@ int main()
     return 0;
 }
 
-void processFile(FILE *pseudocode) {
+void processFile(FILE *pseudocode)
+{
     char rawCode[61];
     analyzeCode(pseudocode, rawCode);
 }
 
-void run() {
+void run()
+{
     createWindow();
 }
+
+

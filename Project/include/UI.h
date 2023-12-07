@@ -42,7 +42,7 @@ void generateWindowContent() {
     setfillstyle(SOLID_FILL, COLOR(45,45,45));
     bar(0, 0, getmaxx(), getmaxy());  // Draw a rectangle covering background of entire window
 
-    settextstyle(DEFAULT_FONT, HORIZ_DIR, H3);
+    settextstyle(SANS_SERIF_FONT, HORIZ_DIR, H3); // Default font is too thin, use sans serif
     settextjustify(CENTER_TEXT, CENTER_TEXT);
     outTextMiddle(WIDTH/6, TITLE);
     /*
