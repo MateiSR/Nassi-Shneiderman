@@ -2,6 +2,8 @@
 #include <winbgim.h>
 #include "Constants.h"
 #include "Structures.h"
+#include "Files.h"
+#include <iostream> // remove later
 #define TITLE "Diagrame Nassi-Shneiderman"
 #pragma once
 
@@ -19,6 +21,33 @@ enum TEXT_SIZES {
 
 // show the code from block
 void showCodeFromBlock(block Block) {
+    FILE *in = fopen(INPUT_FILE, "r");
+    goToLine(in, Block.lineNum);
+
+    char buffer[61];
+    bool done = false;
+    bool started = false;
+    while (!done && fgets(buffer, 61, in)) {
+        int lineType = getLineType(buffer);
+
+        if (lineType == 7 && !started) {
+            started = true;
+            continue;
+        }
+
+        if (lineType == 8) {
+            done = true;
+            continue;
+        }
+
+        if (started) {
+                // TODO: change to outtextxy, review function definition
+                std::cout << buffer;
+        }
+
+    }
+
+    fclose(in);
 }
 
 
@@ -123,7 +152,7 @@ void drawDiagramBorder(int top, int left) {
 
 
 // Create diagram block by block
-void createDiagram() {
+void createDiagram(blockChain blockVector) {
     /* Merg prin blocuri, tin cont de prioritati
      * adaug blockSize la X pentru fiecare prioritate crescuta (>)
      * si scad blockSize din X pentru fiecare prioritate scazuta (<)
@@ -133,18 +162,22 @@ void createDiagram() {
      * --- daca lineType = if, drawIfBlock etc.
     */
 
-    // Aici doar parcurg block-urile din blockVector cu un for
-    // TODO: schimba functiile sa ia ca argument un block, nu char *, ca pot folosi drawCodeFromBlock
-}
-
-void createWindow() {
-    initwindow(WIDTH, HEIGHT);
-    setWindowTitle(TITLE);
-    generateWindowContent();
     drawDiagramBorder(100,100);
     // drawLoopTestAfter("x <= 321", 300, 300);
     // drawIfStartBlock("xxxx", 300, 300, 150);
     drawForLoop("(i=0;;i++)", "cout<<i; \n break;", 300, 300);
+
+    // Aici doar parcurg block-urile din blockVector cu un for
+    // TODO: schimba functiile sa ia ca argument un block, nu char *, ca pot folosi drawCodeFromBlock
+
+    showCodeFromBlock(blockVector.Block[2]);
+}
+
+void createWindow(blockChain blockVector) {
+    initwindow(WIDTH, HEIGHT);
+    setWindowTitle(TITLE);
+    generateWindowContent();
+    createDiagram(blockVector);
     getch(); // Keep window open
     closegraph();
 }

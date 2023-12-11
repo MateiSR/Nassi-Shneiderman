@@ -9,29 +9,12 @@
 #include "include/UI.h"
 #include "include/Constants.h"
 #include "include/Structures.h"
-/* Definitions */
-#define INPUT_FILE "input.txt"
-
 
 using namespace std;
 
 /* Function headers */
 void processFile(FILE *pseudocode);
 void run();
-
-// Obtine tipul liniei curente
-LineType getLineType(char codeLine[])
-{
-    if(strstr(codeLine,"if(")) return ifStatement;
-    else if(strstr(codeLine,"else")) return elseStatement;
-    else if(strstr(codeLine,"while(")) return whileStatement;
-    else if(strstr(codeLine,"repeat")) return repeatUntilStatementBegin;
-    else if(strstr(codeLine,"until")) return repeatUntilStatementEnd;
-    else if(strstr(codeLine,"for(")) return forStatement;
-    else if(strstr(codeLine,"{")) return braceBeggining;
-    else if(strstr(codeLine,"}")) return braceEnd;
-    else return otherStatement;
-}
 
 // Ia instructiune din parantezele unui statement
 void getInstruction (char rawCodeLine[], char rawInstruction[])
@@ -78,9 +61,6 @@ void analyzeCode(FILE *fptr, char rawCode[])
         }
         else{ //else, check for validity of braces placed.
             //paranteze1
-            /*aici te rog sa salvezi si linia la care se termina code block-ul
-            * (linia pe care e brace-ul -1) ca sa afisez mai usor
-            */
         }
         cout<<rawCode<<' ';
     }
@@ -122,6 +102,6 @@ void processFile(FILE *pseudocode)
 
 void run()
 {
-    createWindow();
+    createWindow(blockVector);
 }
 

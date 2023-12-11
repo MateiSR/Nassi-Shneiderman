@@ -14,6 +14,20 @@ enum LineType
     braceEnd = 8
 } ;
 
+// Obtine tipul liniei curente
+LineType getLineType(char codeLine[])
+{
+    if(strstr(codeLine,"if(")) return ifStatement;
+    else if(strstr(codeLine,"else")) return elseStatement;
+    else if(strstr(codeLine,"while(")) return whileStatement;
+    else if(strstr(codeLine,"repeat")) return repeatUntilStatementBegin;
+    else if(strstr(codeLine,"until")) return repeatUntilStatementEnd;
+    else if(strstr(codeLine,"for(")) return forStatement;
+    else if(strstr(codeLine,"{")) return braceBeggining;
+    else if(strstr(codeLine,"}")) return braceEnd;
+    else return otherStatement;
+}
+
 // Block struct
 struct block
 {
