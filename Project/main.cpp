@@ -8,28 +8,16 @@
 /* Header files */
 #include "include/UI.h"
 #include "include/Constants.h"
+#include "include/Structures.h"
 /* Definitions */
 #define INPUT_FILE "input.txt"
+
 
 using namespace std;
 
 /* Function headers */
 void processFile(FILE *pseudocode);
 void run();
-
-// Tipuri de statement-uri posibile in pseudocod
-enum LineType
-{
-    otherStatement = 0,
-    ifStatement = 1,
-    elseStatement = 2,
-    whileStatement = 3,
-    repeatUntilStatementBegin = 4,
-    repeatUntilStatementEnd = 5,
-    forStatement = 6,
-    braceBeggining = 7,
-    braceEnd = 8
-} ;
 
 // Obtine tipul liniei curente
 LineType getLineType(char codeLine[])
@@ -44,21 +32,6 @@ LineType getLineType(char codeLine[])
     else if(strstr(codeLine,"}")) return braceEnd;
     else return otherStatement;
 }
-
-// Block struct
-struct block
-{
-    int lineNum;
-    char rawLine[101];
-    char rawInstruction[101];
-    LineType lineType;
-};
-
-struct blockChain
-{
-    block Block[101];
-    unsigned int blockCount=0;
-} blockVector;
 
 // Ia instructiune din parantezele unui statement
 void getInstruction (char rawCodeLine[], char rawInstruction[])

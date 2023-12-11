@@ -1,6 +1,7 @@
 #include <graphics.h>
 #include <winbgim.h>
 #include "Constants.h"
+#include "Structures.h"
 #define TITLE "Diagrame Nassi-Shneiderman"
 #pragma once
 
@@ -17,10 +18,9 @@ enum TEXT_SIZES {
 };
 
 // show the code from block
-/* cum iau block definition-ul din main? eventual mut in alt fisier
 void showCodeFromBlock(block Block) {
 }
-*/
+
 
 void setWindowTitle(char* title) {
     HWND hwnd = GetFocus(); // Get the handle to the current window
