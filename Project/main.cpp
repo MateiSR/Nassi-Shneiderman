@@ -105,6 +105,9 @@ void analyzeCode(FILE *fptr, char rawCode[])
         }
         else{ //else, check for validity of braces placed.
             //paranteze1
+            /*aici te rog sa salvezi si linia la care se termina code block-ul
+            * (linia pe care e brace-ul -1) ca sa afisez mai usor
+            */
         }
         cout<<rawCode<<' ';
     }
@@ -148,5 +151,4 @@ void run()
 {
     createWindow();
 }
-
 

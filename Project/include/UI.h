@@ -2,6 +2,7 @@
 #include <winbgim.h>
 #include "Constants.h"
 #define TITLE "Diagrame Nassi-Shneiderman"
+#pragma once
 
 // Variables
 const int WIDTH = 900, HEIGHT = 900;
@@ -15,6 +16,11 @@ enum TEXT_SIZES {
     P = 2,
 };
 
+// show the code from block
+/* cum iau block definition-ul din main? eventual mut in alt fisier
+void showCodeFromBlock(block Block) {
+}
+*/
 
 void setWindowTitle(char* title) {
     HWND hwnd = GetFocus(); // Get the handle to the current window
@@ -54,7 +60,7 @@ void generateWindowContent() {
 }
 
 // Draw if block in NS diagram
-void drawIfStartBlock(char *instruction, int top, int left, int blockSize = 60) {
+void drawIfStartBlock(char *condition, int top, int left, int blockSize = 60) {
     int bottom = top + blockSize,
         right = MAX_WIDTH;
     rectangle(left, top, right, bottom);
@@ -64,38 +70,55 @@ void drawIfStartBlock(char *instruction, int top, int left, int blockSize = 60) 
 
     outtextxy(left + textwidth("TRUE") /2, bottom, "TRUE");
     outtextxy(right - textwidth("FALSE") / 2, bottom, "FALSE");
-    outtextxy(center, top + textheight(instruction), instruction);
+    outtextxy(center, top + textheight(condition), condition);
 
 }
 
 // --- For, while, do while (<=> repeat until !) ---
 
 // Draw loop with initial test (eg. while) in NS diagram
-void drawLoopTestBefore(char *instruction, int top, int left, int blockSize = 200) {
+void drawLoopTestBefore(char *condition, int top, int left, int blockSize = 200) {
     int bottom = top + blockSize,
     right = MAX_WIDTH;
     rectangle(left, top, right, bottom);
-    rectangle(left + textheight(instruction), top + textheight(instruction), right, bottom);
+    rectangle(left + textheight(condition), top + textheight(condition), right, bottom);
     int center = (left+right)/2;
-    outtextxy(center, top + textheight(instruction), instruction);
+    outtextxy(center, top + textheight(condition), condition);
 }
 
 // Draw loop with final test(eg do while) in NS diagram
-void drawLoopTestAfter(char *instruction, int top, int left, int blockSize = 200) {
+void drawLoopTestAfter(char *condition, int top, int left, int blockSize = 200) {
     int bottom = top + blockSize,
     right = MAX_WIDTH;
     rectangle(left, top, right, bottom);
-    rectangle(left + textheight(instruction), top, right, bottom - textheight(instruction));
+    rectangle(left + textheight(condition), top, right, bottom - textheight(condition));
     int center = (left+right)/2;
-    outtextxy(center, bottom, instruction);
+    outtextxy(center, bottom, condition);
 }
 
 // Draw for loop in NS diagram
-void drawForLoop(char *instruction, int top, int left, int blockSize = 200) {
+void drawForLoop(char *condition, char *codeBlock, int top, int left, int blockSize = 200) {
+    int bottom = top + blockSize,
+    right = MAX_WIDTH;
+    rectangle(left, top, right, bottom);
+    int center = (left+right)/2;
+    outtextxy(center, top + textheight(condition), condition);
+    // Code block coords:
+    int codeBlockTop = top + textheight(condition) * 1.5,
+        codeBlockBottom = bottom - textheight(condition) * 1.5,
+        codeBlockLeft = left+textheight(condition);
+    rectangle(codeBlockLeft, codeBlockTop, right, codeBlockBottom);
+    // Put text inside code block
+    outtextxy(codeBlockLeft + textwidth(codeBlock), codeBlockTop + textheight(codeBlock), codeBlock);
+    // ^^ to replace with drawCodeFromBlock
 }
 
 // Draw main (rectangle) diagram border
-void drawDiagramBorder() {
+void drawDiagramBorder(int top, int left) {
+    const int blockSize = MAX_HEIGHT - top;
+    int bottom = top + blockSize,
+    right = MAX_WIDTH;
+    rectangle(left, top, right, bottom);
 }
 
 
@@ -109,14 +132,19 @@ void createDiagram() {
      * --- de adagaut structura asociata lineType-urilor:
      * --- daca lineType = if, drawIfBlock etc.
     */
+
+    // Aici doar parcurg block-urile din blockVector cu un for
+    // TODO: schimba functiile sa ia ca argument un block, nu char *, ca pot folosi drawCodeFromBlock
 }
 
 void createWindow() {
     initwindow(WIDTH, HEIGHT);
     setWindowTitle(TITLE);
     generateWindowContent();
-    drawLoopTestBefore("x <= 321", 300, 300);
+    drawDiagramBorder(100,100);
+    // drawLoopTestAfter("x <= 321", 300, 300);
     // drawIfStartBlock("xxxx", 300, 300, 150);
+    drawForLoop("(i=0;;i++)", "cout<<i; \n break;", 300, 300);
     getch(); // Keep window open
     closegraph();
 }
