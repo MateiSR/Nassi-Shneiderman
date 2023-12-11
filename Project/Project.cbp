@@ -33,6 +33,8 @@
 			<Add option="-fexceptions" />
 		</Compiler>
 		<Unit filename="include/Constants.h" />
+		<Unit filename="include/Files.h" />
+		<Unit filename="include/Structures.h" />
 		<Unit filename="include/UI.h" />
 		<Unit filename="input.txt" />
 		<Unit filename="main.cpp" />
