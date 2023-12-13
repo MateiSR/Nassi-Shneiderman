@@ -1,19 +1,31 @@
 int x = 5;
-while(x>3)
+while (x>3)
 {
     x--;
     cout<<x;
+    functionWhile1();
 }
-if(x==3)
+if (x==3)
 {
     repeat
     {
         cout<<x;
+        run();
+        if (true)
+        {
+        testFun123();
+        }
     }
     until x==1
 }
 else
 {
     cout<<x;
+}
+for (int i = 1;i<3;i++)
+{
+    printf("i=%d", i);
+    cout << "Adevarat";
+    cout << "Fals";
 }
 return 0;

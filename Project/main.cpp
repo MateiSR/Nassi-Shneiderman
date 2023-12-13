@@ -35,6 +35,7 @@ void addBlock(block newBlock)
 {
     blockVector.blockCount++;
     blockVector.Block[blockVector.blockCount]=newBlock;
+    blockVector.Block[blockVector.blockCount].index = blockVector.blockCount;
 }
 // Parcurge codul linie cu linie si stabileste tipul de statement
 void analyzeCode(FILE *fptr, char rawCode[])
