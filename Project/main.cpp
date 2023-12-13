@@ -41,6 +41,7 @@ void analyzeCode(FILE *fptr, char rawCode[])
 {
     unsigned short line = 0;
     block newBlock;
+    int currPriority = 0;
     char rawInstructions[61] = "\0";
     while(fgets(rawCode,61,fptr))
     {
@@ -55,19 +56,18 @@ void analyzeCode(FILE *fptr, char rawCode[])
         newBlock.rawLine[strlen(newBlock.rawLine)-1]='\0';
         newBlock.lineNum=line;
         //If block is not a brace, add it to the block list
-        if(newBlock.lineType!=7&&newBlock.lineType!=8)
-        {
+        if(newBlock.lineType==7) currPriority++;
+        else if(newBlock.lineType==8) currPriority--;
+        else {
+            newBlock.priority=currPriority;
             addBlock(newBlock);
-        }
-        else{ //else, check for validity of braces placed.
-            //paranteze1
         }
         cout<<rawCode<<' ';
     }
     cout<<"Number of blocks: "<<blockVector.blockCount<<'\n';
         for(int i=1; i<=blockVector.blockCount; i++)
         {
-            cout<< "Block number "<<i<<": "<<blockVector.Block[i].rawLine<<", of Type: "<<blockVector.Block[i].lineType<<", situated at line: "<<blockVector.Block[i].lineNum<<'\n';
+            cout<< "Block number "<<i<<": "<<blockVector.Block[i].rawLine<<", of Type: "<<blockVector.Block[i].lineType<<", situated at line: "<<blockVector.Block[i].lineNum<<" has priority: "<<blockVector.Block[i].priority<<'\n';
         }
 }
 

@@ -31,6 +31,7 @@ LineType getLineType(char codeLine[])
 // Block struct
 struct block
 {
+    int priority;
     int lineNum;
     char rawLine[101];
     char rawInstruction[101];
