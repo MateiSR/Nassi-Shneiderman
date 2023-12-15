@@ -7,6 +7,30 @@ using namespace std;
 void processFile(FILE *pseudocode);
 void run();
 
+// Is drawable block
+bool isDrawableBlock(block Block) {
+    const int validLineTypes[] = {1,3,4,6};
+    for (int type: validLineTypes)
+        if (Block.lineType == type) return true;
+    return false;
+}
+
+// Return how many children it has
+int findChildren(block Block) {
+    int i = Block.index + 1;
+    int lastPrio = Block.priority;
+    int cnt = 0;
+    if (!isDrawableBlock(Block)) return 0;
+    while (i <= blockVector.blockCount) {
+        if (blockVector.Block[i].priority > lastPrio) {
+            if (isDrawableBlock(blockVector.Block[i])) cnt++;
+        }
+        else if (blockVector.Block[i].priority == lastPrio) break;
+        i++;
+    }
+    return cnt;
+}
+
 // Ia instructiune din parantezele unui statement
 void getInstruction (char rawCodeLine[], char rawInstruction[])
 {
@@ -59,7 +83,8 @@ void analyzeCode(FILE *fptr, char rawCode[])
     cout<<"Number of blocks: "<<blockVector.blockCount<<'\n';
         for(int i=1; i<=blockVector.blockCount; i++)
         {
-            cout<< "Block number "<<i<<": "<<blockVector.Block[i].rawLine<<", of Type: "<<blockVector.Block[i].lineType<<", situated at line: "<<blockVector.Block[i].lineNum<<" has priority: "<<blockVector.Block[i].priority<<'\n';
+            cout<< "Block number "<<i<<": "<<blockVector.Block[i].rawLine<<", of Type: "<<blockVector.Block[i].lineType<<", situated at line: "
+                <<blockVector.Block[i].lineNum<<" has priority: "<<blockVector.Block[i].priority<<" has children: "<<findChildren(blockVector.Block[i])<<'\n';
         }
 }
 

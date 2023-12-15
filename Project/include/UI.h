@@ -27,14 +27,6 @@ enum TEXT_SIZES {
 // Choose function to use based on lineType
 void drawBlock(block Block, int index, int top, int left, int blockSize);
 
-// Is drawable block
-bool isDrawableBlock(block Block) {
-    const int validLineTypes[] = {1,3,4,6};
-    for (int type: validLineTypes)
-        if (Block.lineType == type) return true;
-    return false;
-}
-
 // show the code from block
 void showCodeFromBlock(block Block, int x, int y) {
     FILE *in = fopen(INPUT_FILE, "r");
@@ -222,10 +214,10 @@ void createDiagram(blockChain blockVector) {
 
     int top, left; top = left = 100;
     drawDiagramBorder(top, left);
-    drawLoopTestAfter(blockVector.Block[6], 100, 100);
+    //drawLoopTestAfter(blockVector.Block[6], 100, 100);
     //drawIfStartBlock("xxxx", 300, 100, 150);
-    drawForLoop(blockVector.Block[15], 300, 100);
-    drawLoopTestBefore(blockVector.Block[2], 500, 100);
+    //drawForLoop(blockVector.Block[15], 300, 100);
+    //drawLoopTestBefore(blockVector.Block[2], 500, 100);
     //drawIfBlock(blockVector.Block[6], 700, 100);
     /*
     int currentBlockSize = 150; // to be done automatically based on how much text there is
