@@ -17,16 +17,20 @@ bool isDrawableBlock(block Block) {
 
 // Return how many children it has
 int findChildren(block Block) {
+    //printf("Saving children for block id %d\n", Block.index);
     int i = Block.index + 1;
+    int j = Block.index;
     int lastPrio = Block.priority;
     int cnt = 0;
-    if (!isDrawableBlock(Block)) return 0;
+    if (!isDrawableBlock(Block) && Block.lineType != 2) return 0;
     while (i <= blockVector.blockCount) {
-        if (blockVector.Block[i].priority > lastPrio)
-            if (isDrawableBlock(blockVector.Block[i])) {
+        if (blockVector.Block[i].priority > lastPrio) {
                 cnt++;
-                blockVector.Block[i].children.indexes[++blockVector.Block[i].children.num] = blockVector.Block[i].index;
-            }
+                blockVector.Block[j].children.num++;
+                blockVector.Block[j].children.indexes[blockVector.Block[j].children.num] = blockVector.Block[i].index;
+                //printf("----%d---cnt=%d-\n", blockVector.Block[j].children.num, cnt);
+
+        }
         else if (blockVector.Block[i].priority == lastPrio) break;
         i++;
     }
@@ -35,17 +39,20 @@ int findChildren(block Block) {
 
 // Get blockSize (height) needed
 int getBlockSize(block Block) {
+    if (Block.lineType == 0) return textheight(Block.rawLine);
     FILE *in = fopen(INPUT_FILE, "r");
     goToLine(in, Block.lineNum);
+    int instSize = 0;
     int y = 0;
     char buffer[61];
     bool done = false;
     bool started = false;
     while (!done && fgets(buffer, 61, in)) {
+        if (!instSize) instSize = textheight(buffer);
         int lineType = getLineType(buffer);
         if (lineType == 7) continue;
 
-        if (lineType == 8) {
+        if ((lineType == 8 && Block.lineType != 4) || lineType == 5) {
             done = true;
         }
         y += textheight(buffer);
@@ -53,7 +60,22 @@ int getBlockSize(block Block) {
     }
 
     fclose(in);
-    return y;
+    bool allZeroes = true;
+    for (int k = 1; k <= Block.children.num; k++) {
+            int kInd = Block.children.indexes[k];
+            block kBlock = blockVector.Block[kInd];
+            if (kBlock.lineType != 0 && kBlock.lineType != 5) allZeroes = false;
+        }
+    if (!Block.children.num || allZeroes) return y;
+    // else go through children and get total sum of blocksizes
+    else {
+        int sum = 0;
+        for (int j = 1; j <= Block.children.num; j++) {
+            block currentChild = blockVector.Block[Block.children.indexes[j]];
+            sum += getBlockSize(currentChild);
+        }
+    return sum + instSize;
+    }
 }
 
 // Ia instructiune din parantezele unui statement
@@ -105,6 +127,9 @@ void analyzeCode(FILE *fptr, char rawCode[])
         }
         cout<<rawCode<<' ';
     }
+
+    for (int i = 1; i <= blockVector.blockCount; i++) blockVector.Block[i].index = i;
+
     cout<<"Number of blocks: "<<blockVector.blockCount<<'\n';
         for(int i=1; i<=blockVector.blockCount; i++)
         {

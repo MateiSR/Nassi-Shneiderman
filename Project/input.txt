@@ -12,16 +12,22 @@ if (x==3)
     {
         cout<<x;
         run();
-        if (true)
-        {
-        testFun123();
-        }
     }
     until x==1
 }
 else
 {
-    cout<<x;
+    x = 4;
+    while (x < 3)
+    {
+        x--;
+        walk();
+    }
+    x++;
+    while (x > 4)
+    {
+        true
+    }
 }
 for (int i = 1;i<3;i++)
 {
@@ -29,4 +35,10 @@ for (int i = 1;i<3;i++)
     cout << "Adevarat";
     cout << "Fals";
 }
+repeat
+{
+test
+xyz
+}
+until never
 return 0;

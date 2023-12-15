@@ -40,5 +40,7 @@ void processFile(FILE *pseudocode)
 void run()
 {
     createWindow(blockVector);
+    for (int i = 1; i <= blockVector.blockCount; i++)
+        printf("i=%d, index=%d\n", i, blockVector.Block[i].index);
 }
 
