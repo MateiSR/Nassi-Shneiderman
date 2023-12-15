@@ -96,6 +96,17 @@ void generateWindowContent() {
     */
 }
 
+// Draw simple instruction block
+void drawSimpleBlock(block Block, int top, int left) {
+    const int blockSize = textheight(Block.rawLine),
+        bottom = top + blockSize,
+        right = MAX_WIDTH;
+    rectangle(left, top, right, bottom);
+    int center = (left+right)/2;
+    outtextxy(center, bottom, Block.rawLine);
+
+}
+
 // Draw if block start in NS diagram
 void drawIfStartBlock(char *condition, int top, int left, int blockSize = 60) {
     int bottom = top + blockSize,
@@ -214,6 +225,7 @@ void createDiagram(blockChain blockVector) {
 
     int top, left; top = left = 100;
     drawDiagramBorder(top, left);
+    //drawSimpleBlock(blockVector.Block[1], 100, 100);
     //drawLoopTestAfter(blockVector.Block[6], 100, 100);
     //drawIfStartBlock("xxxx", 300, 100, 150);
     //drawForLoop(blockVector.Block[15], 300, 100);
@@ -226,8 +238,6 @@ void createDiagram(blockChain blockVector) {
         //drawBlock(blockVector.Block[i], i, top, priority * currentBlockSize, currentBlockSize);
         top += currentBlockSize;
     }*/
-
-    // if next prio > curr prio => has more children
 
     //showCodeFromBlock(blockVector.Block[2]);
 }
@@ -259,4 +269,5 @@ enum LineType
     else if (Block.lineType == 3) drawLoopTestBefore(Block, top, left, blockSize);
     else if (Block.lineType == 4) drawLoopTestAfter(Block, top, left, blockSize);
     else if (Block.lineType == 6) drawForLoop(Block, top, left, blockSize);
+    else if (Block.lineType == 0) drawSimpleBlock(Block, top, left);
 }

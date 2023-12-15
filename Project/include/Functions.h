@@ -22,13 +22,43 @@ int findChildren(block Block) {
     int cnt = 0;
     if (!isDrawableBlock(Block)) return 0;
     while (i <= blockVector.blockCount) {
-        if (blockVector.Block[i].priority > lastPrio) {
-            if (isDrawableBlock(blockVector.Block[i])) cnt++;
-        }
+        if (blockVector.Block[i].priority > lastPrio)
+            if (isDrawableBlock(blockVector.Block[i])) {
+                cnt++;
+                blockVector.Block[i].children.indexes[++blockVector.Block[i].children.num] = blockVector.Block[i].index;
+            }
         else if (blockVector.Block[i].priority == lastPrio) break;
         i++;
     }
     return cnt;
+}
+
+// Get blockSize (height) needed
+int getBlockSize(block Block) {
+    FILE *in = fopen(INPUT_FILE, "r");
+    goToLine(in, Block.lineNum);
+    int y = 0;
+    char buffer[61];
+    bool done = false;
+    bool started = false;
+    while (!done && fgets(buffer, 61, in)) {
+        int lineType = getLineType(buffer);
+        if (lineType == 7 && !started) {
+            started = true;
+            continue;
+        }
+
+        if (lineType == 8) {
+            done = true;
+            continue;
+        }
+
+        if (started) y += textheight(buffer);
+
+    }
+
+    fclose(in);
+    return y;
 }
 
 // Ia instructiune din parantezele unui statement

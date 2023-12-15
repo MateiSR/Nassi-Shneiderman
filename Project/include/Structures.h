@@ -36,6 +36,7 @@ struct block
     int lineNum;
     char rawLine[101];
     char rawInstruction[101];
+    struct {unsigned int indexes[101], num = 0;} children;
     LineType lineType;
 };
 
@@ -44,3 +45,5 @@ struct blockChain
     block Block[101];
     unsigned int blockCount=0;
 } blockVector;
+
+
