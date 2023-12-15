@@ -59,7 +59,13 @@ int getBlockSize(block Block) {
     }
 
     fclose(in);
-    if (!Block.children.num) return y;
+    bool allZeroes = true;
+    for (int k = 1; k <= Block.children.num; k++) {
+            int kInd = Block.children.indexes[k];
+            block kBlock = blockVector.Block[kInd];
+            if (kBlock.lineType != 0 && kBlock.lineType != 5) allZeroes = false;
+        }
+    if (!Block.children.num || allZeroes) return y;
     // else go through children and get total sum of blocksizes
     else {
         int sum = 0;
