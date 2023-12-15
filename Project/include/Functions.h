@@ -17,11 +17,12 @@ bool isDrawableBlock(block Block) {
 
 // Return how many children it has
 int findChildren(block Block) {
+    //printf("Saving children for block id %d\n", Block.index);
     int i = Block.index + 1;
     int j = Block.index;
     int lastPrio = Block.priority;
     int cnt = 0;
-    if (!isDrawableBlock(Block)) return 0;
+    if (!isDrawableBlock(Block) && Block.lineType != 2) return 0;
     while (i <= blockVector.blockCount) {
         if (blockVector.Block[i].priority > lastPrio) {
                 cnt++;
@@ -126,6 +127,9 @@ void analyzeCode(FILE *fptr, char rawCode[])
         }
         cout<<rawCode<<' ';
     }
+
+    for (int i = 1; i <= blockVector.blockCount; i++) blockVector.Block[i].index = i;
+
     cout<<"Number of blocks: "<<blockVector.blockCount<<'\n';
         for(int i=1; i<=blockVector.blockCount; i++)
         {

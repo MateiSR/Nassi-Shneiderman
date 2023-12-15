@@ -135,7 +135,7 @@ void drawIfStartBlock(char *condition, int top, int left, int blockSize = 50) {
 
 }
 
-// Draw the parallel block of the if/else
+// Draw the parallel block of the if
 void drawIfParallelBlock(block Block, int top, int left, int blockSize = 200, bool showText = false) {
     int bottom = top + blockSize,
         right = MAX_WIDTH;
@@ -154,6 +154,12 @@ void drawIfParallelBlock(block Block, int top, int left, int blockSize = 200, bo
         }
             i++;
     }
+    //printf("----%d----\n", foundElse);
+}
+
+// Draw the parallel block of the else
+void drawElseParallelBlock(block Block, int top, int left, int blockSize = 200, bool showText = false) {
+
 }
 
 // Draw the full if block
@@ -280,11 +286,11 @@ void createDiagram(blockChain blockVector) {
 
 
     int top = diagram_top, left = diagram_left;
-
+    int oldIfTop = 0;
     for (int i = 1; i <= blockVector.blockCount; i++) {
         block current = blockVector.Block[i];
         if (visited[i]) continue;
-        printf("Creating diagram: Block i = %d with %d children", i, current.children.num);
+        printf("Creating diagram: Block i = %d with %d children\n", i, current.children.num);
         int right = MAX_WIDTH;
         // check if everything is a lineType 0 after this
         bool allZeroes = true;
@@ -293,16 +299,33 @@ void createDiagram(blockChain blockVector) {
             block kBlock = blockVector.Block[kInd];
             if (kBlock.lineType != 0 && kBlock.lineType != 5) allZeroes = false;
         }
+
+        // for if
+        int oldRight = right;
+
+        // treat else differently
+        int oldLeft = left;
+        int oldTop = top;
+        if (current.lineType == 2) {
+            int center = (left+right)/2;
+            left = center;
+            top = oldIfTop;
+            top += max((int)(getBlockSize(blockVector.Block[current.index-1]) / 3.5), 50);
+            top += textheight("DOESNTMATTER");
+            printf(">> Else block at index %d, handling separately\n", current.index);
+        }
+        if (current.lineType != 2) {
         if (!current.children.num || allZeroes) {
             drawBlock(current, -1, top, left, right, true);
             visited[i] = true;
             top += getBlockSize(current);
-            printf(", showing text\n");
+            printf("showing text for id %d\n", current.index);
             continue;
         } else {
             drawBlock(current, -1, top, left, right, false);
             visited[i] = true;
-            printf(", NOT showing text\n");
+            printf("NOT showing text for id %d\n", current.index);
+        }
         }
         int _tempTop = top, _tempLeft = left, _tempRight = right;
         for (int j = 1; j <= current.children.num; j++) {
@@ -312,6 +335,8 @@ void createDiagram(blockChain blockVector) {
             int currentChildIndex = current.children.indexes[j];
             if (visited[currentChildIndex]) continue;
             block currentChild = blockVector.Block[currentChildIndex];
+            // daca s-a ajuns la else dau break si il tratez separat
+            if (currentChild.lineType == 2) break;
             // check if everything is a lineType 0 after this
             bool allZeroes = true;
             for (int k = j + 1; k <= current.children.num; k++) {
@@ -326,7 +351,17 @@ void createDiagram(blockChain blockVector) {
             drawBlock(currentChild, -1, _tempTop, _tempLeft, _tempRight, ((j == current.children.num) || allZeroes));
             visited[currentChildIndex] = true;
         }
+        // reset for if case
+        if (current.lineType == 1) {
+            right = oldRight;
+            oldIfTop = top;
+        }
         top += getBlockSize(current);
+        // reset for else case
+        if (current.lineType == 2) {
+            left = oldLeft;
+            top = oldTop;
+        }
         //if (i == 6) break;
     }
 

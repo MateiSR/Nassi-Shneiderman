@@ -17,7 +17,13 @@ if (x==3)
 }
 else
 {
-    cout<<x;
+    x = 4;
+    while (x < 3)
+    {
+        x--;
+        walk();
+    }
+    x++;
 }
 for (int i = 1;i<3;i++)
 {
