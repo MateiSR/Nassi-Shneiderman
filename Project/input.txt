@@ -24,6 +24,10 @@ else
         walk();
     }
     x++;
+    while (x > 4)
+    {
+        true
+    }
 }
 for (int i = 1;i<3;i++)
 {
@@ -31,4 +35,10 @@ for (int i = 1;i<3;i++)
     cout << "Adevarat";
     cout << "Fals";
 }
+repeat
+{
+test
+xyz
+}
+until never
 return 0;

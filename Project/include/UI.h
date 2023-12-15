@@ -260,6 +260,9 @@ void getChildCoords(block Block, int &top, int &left, int &right, int blockSize)
         // daca e intr-un if
         right = (left+right)/2;
     }
+    else if (Block.lineType == 2) {
+        top += textheight(condition);
+    }
 }
 
 
@@ -311,7 +314,7 @@ void createDiagram(blockChain blockVector) {
             left = center;
             top = oldIfTop;
             top += max((int)(getBlockSize(blockVector.Block[current.index-1]) / 3.5), 50);
-            top += textheight("DOESNTMATTER");
+            //top += textheight("DOESNTMATTER");
             printf(">> Else block at index %d, handling separately\n", current.index);
         }
         if (current.lineType != 2) {
