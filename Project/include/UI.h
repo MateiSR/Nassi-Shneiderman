@@ -222,21 +222,20 @@ void createDiagram(blockChain blockVector) {
 
     int top, left; top = left = 100;
     drawDiagramBorder(top, left);
-    // drawLoopTestAfter(blockVector.Block[6], 300, 300);
-    // drawIfStartBlock("xxxx", 300, 300, 150);
-    // drawForLoop(blockVector.Block[11], 300, 300);
-    // drawLoopTestBefore(blockVector.Block[2], 300, 300);
-    //drawIfBlock(blockVector.Block[6], 300, 300);
-
+    drawLoopTestAfter(blockVector.Block[6], 100, 100);
+    //drawIfStartBlock("xxxx", 300, 100, 150);
+    drawForLoop(blockVector.Block[15], 300, 100);
+    drawLoopTestBefore(blockVector.Block[2], 500, 100);
+    //drawIfBlock(blockVector.Block[6], 700, 100);
+    /*
     int currentBlockSize = 150; // to be done automatically based on how much text there is
     for (int i = 0; i < blockVector.blockCount; i++) {
-        /*if (isDrawableBlock(blockVector.Block[i]))
-            top += currentBlockSize;
-        */
         int priority = blockVector.Block[i].priority + 1;
-        drawBlock(blockVector.Block[i], i, top, priority * currentBlockSize, currentBlockSize);
+        //drawBlock(blockVector.Block[i], i, top, priority * currentBlockSize, currentBlockSize);
         top += currentBlockSize;
-    }
+    }*/
+
+    // if next prio > curr prio => has more children
 
     //showCodeFromBlock(blockVector.Block[2]);
 }
