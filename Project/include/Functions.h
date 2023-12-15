@@ -35,6 +35,7 @@ int findChildren(block Block) {
 
 // Get blockSize (height) needed
 int getBlockSize(block Block) {
+    if (Block.lineType == 0) return textheight(Block.rawLine);
     FILE *in = fopen(INPUT_FILE, "r");
     goToLine(in, Block.lineNum);
     int y = 0;
