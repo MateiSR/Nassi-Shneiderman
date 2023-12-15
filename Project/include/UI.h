@@ -113,7 +113,7 @@ void drawSimpleBlock(block Block, int top, int left) {
     const int blockSize = textheight(Block.rawLine),
         bottom = top + blockSize,
         right = MAX_WIDTH;
-    rectangle(left, top, right, bottom);
+    //rectangle(left, top, right, bottom);
     int center = (left+right)/2;
     outtextxy(center, bottom, Block.rawLine);
 
@@ -279,17 +279,24 @@ void createDiagram(blockChain blockVector) {
 
     for (int i = 1; i <= blockVector.blockCount; i++) {
         block current = blockVector.Block[i];
+        printf("Creating diagram: Block i = %d with %d children \n", i, current.children.num);
         if (visited[i]) continue;
         if (!current.children.num) {
-            drawBlock(current, -1, top, left, false);
+            drawBlock(current, -1, top, left, true);
             visited[i] = true;
             top += getBlockSize(current);
+        } else {
+            drawBlock(current, -1, top, left, false);
+            visited[i] = true;
         }
         int _tempTop = top, _tempLeft = left;
         for (int j = 1; j <= current.children.num; j++) {
             getChildCoords(current, _tempTop, _tempLeft);
             int currentChildIndex = current.children.indexes[j];
             block currentChild = blockVector.Block[currentChildIndex];
+            printf("Creating diagram: Block i = %d, Child j = %d, Drawable: %d\n", i, currentChildIndex, isDrawableBlock(currentChild));
+            if (!isDrawableBlock(currentChild) && currentChild.lineType != 0) continue;
+            //if (currentChild.lineType == 0) outtextxy(left, top, currentChild.rawLine);
             drawBlock(currentChild, -1, _tempTop, _tempLeft, (j == current.children.num));
             visited[currentChildIndex] = true;
         }

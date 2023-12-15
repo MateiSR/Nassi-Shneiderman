@@ -18,15 +18,18 @@ bool isDrawableBlock(block Block) {
 // Return how many children it has
 int findChildren(block Block) {
     int i = Block.index + 1;
+    int j = Block.index;
     int lastPrio = Block.priority;
     int cnt = 0;
     if (!isDrawableBlock(Block)) return 0;
     while (i <= blockVector.blockCount) {
-        if (blockVector.Block[i].priority > lastPrio)
-            if (isDrawableBlock(blockVector.Block[i])) {
+        if (blockVector.Block[i].priority > lastPrio) {
                 cnt++;
-                blockVector.Block[i].children.indexes[++blockVector.Block[i].children.num] = blockVector.Block[i].index;
-            }
+                blockVector.Block[j].children.num++;
+                blockVector.Block[j].children.indexes[blockVector.Block[j].children.num] = blockVector.Block[i].index;
+                //printf("----%d---cnt=%d-\n", blockVector.Block[j].children.num, cnt);
+
+        }
         else if (blockVector.Block[i].priority == lastPrio) break;
         i++;
     }
