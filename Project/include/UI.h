@@ -3,6 +3,7 @@
 #include "Constants.h"
 #include "Structures.h"
 #include "Files.h"
+#include "Functions.h"
 #include <iostream> // remove later
 #define TITLE "Diagrame Nassi-Shneiderman"
 #pragma once
@@ -25,7 +26,7 @@ enum TEXT_SIZES {
 };
 
 // Choose function to use based on lineType
-void drawBlock(block Block, int index, int top, int left, int blockSize);
+void drawBlock(block Block, int index, int top, int left);
 
 // show the code from block
 void showCodeFromBlock(block Block, int x, int y) {
@@ -197,8 +198,8 @@ void drawForLoop(block Block, int top, int left, int blockSize = 200) {
     int center = (left+right)/2;
     outtextxy(center, top + textheight(condition), condition);
     // Code block coords:
-    int codeBlockTop = top + textheight(condition) * 1.5,
-        codeBlockBottom = bottom - textheight(condition) * 1.5,
+    int codeBlockTop = top + textheight(condition),
+        codeBlockBottom = bottom - textheight(condition),
         codeBlockLeft = left+textheight(condition);
     rectangle(codeBlockLeft, codeBlockTop, right, codeBlockBottom);
     // Put text inside code block
@@ -226,11 +227,12 @@ void createDiagram(blockChain blockVector) {
     int top, left; top = left = 100;
     drawDiagramBorder(top, left);
     //drawSimpleBlock(blockVector.Block[1], 100, 100);
-    //drawLoopTestAfter(blockVector.Block[6], 100, 100);
+    //drawLoopTestAfter(blockVector.Block[8], 100, 100);
     //drawIfStartBlock("xxxx", 300, 100, 150);
-    //drawForLoop(blockVector.Block[15], 300, 100);
+    //drawForLoop(blockVector.Block[16], 300, 100);
     //drawLoopTestBefore(blockVector.Block[2], 500, 100);
     //drawIfBlock(blockVector.Block[6], 700, 100);
+    drawBlock(blockVector.Block[16], -1, 300, 100);
     /*
     int currentBlockSize = 150; // to be done automatically based on how much text there is
     for (int i = 0; i < blockVector.blockCount; i++) {
@@ -251,23 +253,10 @@ void createWindow(blockChain blockVector) {
     closegraph();
 }
 
-void drawBlock(block Block, int index, int top, int left, int blockSize) {
-/*
-enum LineType
-{
-    otherStatement = 0,
-    ifStatement = 1,
-    elseStatement = 2,
-    whileStatement = 3,
-    repeatUntilStatementBegin = 4,
-    repeatUntilStatementEnd = 5,
-    forStatement = 6,
-    braceBeggining = 7,
-    braceEnd = 8
-} ;*/
-    if (Block.lineType == 1) drawIfBlock(Block, top, left, blockSize);
-    else if (Block.lineType == 3) drawLoopTestBefore(Block, top, left, blockSize);
-    else if (Block.lineType == 4) drawLoopTestAfter(Block, top, left, blockSize);
-    else if (Block.lineType == 6) drawForLoop(Block, top, left, blockSize);
+void drawBlock(block Block, int index, int top, int left) {
+    if (Block.lineType == 1) drawIfBlock(Block, top, left, getBlockSize(Block));
+    else if (Block.lineType == 3) drawLoopTestBefore(Block, top, left, getBlockSize(Block));
+    else if (Block.lineType == 4) drawLoopTestAfter(Block, top, left, getBlockSize(Block));
+    else if (Block.lineType == 6) drawForLoop(Block, top, left, getBlockSize(Block));
     else if (Block.lineType == 0) drawSimpleBlock(Block, top, left);
 }

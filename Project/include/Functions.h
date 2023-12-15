@@ -43,17 +43,12 @@ int getBlockSize(block Block) {
     bool started = false;
     while (!done && fgets(buffer, 61, in)) {
         int lineType = getLineType(buffer);
-        if (lineType == 7 && !started) {
-            started = true;
-            continue;
-        }
+        if (lineType == 7) continue;
 
         if (lineType == 8) {
             done = true;
-            continue;
         }
-
-        if (started) y += textheight(buffer);
+        y += textheight(buffer);
 
     }
 
