@@ -41,11 +41,13 @@ int getBlockSize(block Block) {
     if (Block.lineType == 0) return textheight(Block.rawLine);
     FILE *in = fopen(INPUT_FILE, "r");
     goToLine(in, Block.lineNum);
+    int instSize = 0;
     int y = 0;
     char buffer[61];
     bool done = false;
     bool started = false;
     while (!done && fgets(buffer, 61, in)) {
+        if (!instSize) instSize = textheight(buffer);
         int lineType = getLineType(buffer);
         if (lineType == 7) continue;
 
@@ -57,7 +59,16 @@ int getBlockSize(block Block) {
     }
 
     fclose(in);
-    return y;
+    if (!Block.children.num) return y;
+    // else go through children and get total sum of blocksizes
+    else {
+        int sum = 0;
+        for (int j = 1; j <= Block.children.num; j++) {
+            block currentChild = blockVector.Block[Block.children.indexes[j]];
+            sum += getBlockSize(currentChild);
+        }
+    return sum + instSize;
+    }
 }
 
 // Ia instructiune din parantezele unui statement
