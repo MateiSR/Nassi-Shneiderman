@@ -12,10 +12,6 @@ if (x==3)
     {
         cout<<x;
         run();
-        if (true)
-        {
-        testFun123();
-        }
     }
     until x==1
 }

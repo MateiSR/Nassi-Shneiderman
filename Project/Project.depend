@@ -11,7 +11,7 @@
 	"include/Structures.h"
 	"include/Functions.h"
 
-1702646860 e:\coding\cpp\nassi-shneiderman\project\include\ui.h
+1702651026 e:\coding\cpp\nassi-shneiderman\project\include\ui.h
 	<graphics.h>
 	<winbgim.h>
 	"Constants.h"
@@ -28,7 +28,7 @@
 
 1702334281 e:\coding\cpp\nassi-shneiderman\project\include\files.h
 
-1702647195 e:\coding\cpp\nassi-shneiderman\project\include\functions.h
+1702649517 e:\coding\cpp\nassi-shneiderman\project\include\functions.h
 	"Structures.h"
 	<iostream>
 

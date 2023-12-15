@@ -51,7 +51,7 @@ int getBlockSize(block Block) {
         int lineType = getLineType(buffer);
         if (lineType == 7) continue;
 
-        if (lineType == 8) {
+        if ((lineType == 8 && Block.lineType != 4) || lineType == 5) {
             done = true;
         }
         y += textheight(buffer);
