@@ -183,6 +183,7 @@ void drawElseParallelBlock(block Block, int top, int left, int blockSize = 200, 
 
 // Draw the full if block
 void drawIfBlock(block Block, int top, int left, int blockSize = 200, bool showText = false) {
+    printf("\n\n\n%d\n\n\n", blockSize);
     int originalColor = getcolor();
     int blockColor = IF_COLOR;
     setcolor(blockColor);
@@ -190,8 +191,9 @@ void drawIfBlock(block Block, int top, int left, int blockSize = 200, bool showT
     const int ifBlockSize = max((int)(blockSize / 3.5), 50);
 
     drawIfStartBlock(condition, top, left, ifBlockSize);
-    drawIfParallelBlock(Block, top + ifBlockSize, left, blockSize - ifBlockSize * 0.75, showText); // *0.75 slightly hardcoded
-    //delay(2000);
+    //drawIfParallelBlock(Block, top + ifBlockSize, left, blockSize - ifBlockSize * 0.75, showText);
+    drawIfParallelBlock(Block, top + ifBlockSize, left, blockSize - ifBlockSize, showText);
+    delay(2000);
     setcolor(originalColor);
 }
 
@@ -271,6 +273,20 @@ void drawDiagramBorder() {
     rectangle(left, top, right, bottom);
 }
 
+int getIfElseBlockSize(block Block) {
+        int ifBlockSize = getBlockSize(Block),
+            elseBlockSize = 0;
+        unsigned int i = Block.index + 1;
+        // caut urmatorul else cu aceeasi prioritate
+        for (i; i < blockVector.blockCount && ! elseBlockSize; i++) {
+            block current = blockVector.Block[i];
+            if (current.lineType == 2 && current.priority == Block.priority) elseBlockSize = getBlockSize(current);
+        }
+        int maxBlockSize = max(ifBlockSize, elseBlockSize);
+        printf("in getIfElseBlocksize: if : %d, else : %d, max : %d\n\n\n", ifBlockSize, elseBlockSize, maxBlockSize);
+        return maxBlockSize;
+}
+
 // Get child coordinates
 void getChildCoords(block Block, int &top, int &left, int &right, int blockSize) {
     char *condition = Block.rawInstruction;
@@ -304,6 +320,10 @@ void getChildCoords(block Block, int &top, int &left, int &right, int blockSize)
 
 // Create diagram block by block
 void createDiagram(blockChain blockVector) {
+
+    // la while in if nu se modifica corect top-ul
+    // Block size ul unui if/else trebuie sa fie max(blockSizeIf, blockSizeElse)
+
     /* Merg prin blocuri, tin cont de prioritati
      * adaug blockSize la X pentru fiecare prioritate crescuta (>)
      * si scad blockSize din X pentru fiecare prioritate scazuta (<)
@@ -349,7 +369,7 @@ void createDiagram(blockChain blockVector) {
             int center = (left+right)/2;
             left = center;
             top = oldIfTop;
-            top += max((int)(getBlockSize(blockVector.Block[current.index-1]) / 3.5), 50);
+            top += max((int)(getIfElseBlockSize(blockVector.Block[current.index-1]) / 3.5), 50);
             //top += textheight("DOESNTMATTER");
             printf(">> Else block at index %d, handling separately\n", current.index);
         }
@@ -370,7 +390,10 @@ void createDiagram(blockChain blockVector) {
         int _tempTop = top, _tempLeft = left, _tempRight = right;
         for (int j = 1; j <= current.children.num; j++) {
             printf("Current coords: top=%d left=%d right=%d\n", _tempTop, _tempLeft, _tempRight);
-            getChildCoords(current, _tempTop, _tempLeft, _tempRight, getBlockSize(current));
+            int currBlockSize;
+            if (current.lineType == 1 || current.lineType == 2) currBlockSize = getIfElseBlockSize(current);
+                else currBlockSize = getBlockSize(current);
+            getChildCoords(current, _tempTop, _tempLeft, _tempRight, currBlockSize);
             printf("Altered coords: top=%d left=%d right=%d\n", _tempTop, _tempLeft, _tempRight);
             int currentChildIndex = current.children.indexes[j];
             if (visited[currentChildIndex]) continue;
@@ -396,7 +419,10 @@ void createDiagram(blockChain blockVector) {
             right = oldRight;
             oldIfTop = top;
         }
-        top += getBlockSize(current);
+        int currBlockSize;
+        if (current.lineType == 1 || current.lineType == 2) currBlockSize = getIfElseBlockSize(current);
+            else currBlockSize = getBlockSize(current);
+        top += currBlockSize;
         // reset for else case
         if (current.lineType == 2) {
             left = oldLeft;
@@ -422,7 +448,8 @@ void createWindow(blockChain blockVector) {
 }
 
 void drawBlock(block Block, int index, int top, int left, int right, bool showText, int color) {
-    if (Block.lineType == 1) drawIfBlock(Block, top, left, getBlockSize(Block), showText);
+    delay(1000);
+    if (Block.lineType == 1) drawIfBlock(Block, top, left, getIfElseBlockSize(Block), showText);
     else if (Block.lineType == 3) drawLoopTestBefore(Block, top, left, getBlockSize(Block), showText, right);
     else if (Block.lineType == 4) drawLoopTestAfter(Block, top, left, getBlockSize(Block), showText, right);
     else if (Block.lineType == 6) drawForLoop(Block, top, left, getBlockSize(Block), showText, right);

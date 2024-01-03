@@ -7,6 +7,14 @@ while (x>3)
 }
 if (x==3)
 {
+    x = 4;
+    while (x > 4)
+    {
+        true
+    }
+}
+else
+{
     x--;
     repeat
     {
@@ -15,20 +23,6 @@ if (x==3)
         execute();
     }
     until x==1
-}
-else
-{
-    x = 4;
-    while (x < 3)
-    {
-        x--;
-        walk();
-    }
-    x++;
-    while (x > 4)
-    {
-        true
-    }
 }
 for (int i = 1;i<3;i++)
 {
