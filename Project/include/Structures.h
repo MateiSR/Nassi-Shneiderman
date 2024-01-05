@@ -3,6 +3,7 @@
 // Tipuri de statement-uri posibile in pseudocod
 enum LineType
 {
+    invalidStatement = -1,
     otherStatement = 0,
     ifStatement = 1,
     elseStatement = 2,

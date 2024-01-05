@@ -286,6 +286,8 @@ void drawLoopTestBefore(block Block, int &top, int &left, int right) {
 }*/
 
 int drawLoopTestAfter(block Block, int& top, int& left, int right) {
+    int originalColor = getcolor();
+    setcolor(getBlockColor(Block.lineType));
     int blockHeight = getBlockSize(Block);
     int bottom = top + blockHeight;
 
@@ -294,7 +296,8 @@ int drawLoopTestAfter(block Block, int& top, int& left, int right) {
     left -= textheight(Block.rawLine);
     bottom += textheight(Block.rawLine) + SPACE_UNDER_TEXT;
     rectangle(left, top, right, bottom); cout << "am desenat din nou\n";
-
+    left += textheight(Block.rawLine);
+    setcolor(originalColor);
     return bottom;
 }
 
