@@ -1,5 +1,13 @@
-repeat
+for (int i = 5; i; i++)
 {
-} 
-until (x==0);
-x--;
+    c++;
+    for (int i = 4; i <= 5; i++)
+    {
+        cum;
+        while (x==5)
+        {
+        jump;
+        }
+    }
+}
+c--;

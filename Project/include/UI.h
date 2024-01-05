@@ -26,6 +26,23 @@ enum TEXT_SIZES {
     P = 2,
 };
 
+// Block colors
+const int DEFAULT_COLOR = COLOR(255,255,255),
+    IF_COLOR = COLOR(255, 0, 0),
+    TEST_BEFORE_COLOR = COLOR(255,255,200),
+    TEST_AFTER_COLOR = COLOR(200,200,0),
+    FOR_COLOR = COLOR(173,216,230),
+    SIMPLE_COLOR = COLOR(255,255,255);
+
+const int getBlockColor(int lineType) {
+    if (lineType == 0) return SIMPLE_COLOR;
+    if (lineType == 1) return IF_COLOR;
+    if (lineType == 3) return TEST_BEFORE_COLOR;
+    if (lineType == 4) return TEST_AFTER_COLOR;
+    if (lineType == 6) return FOR_COLOR;
+    return DEFAULT_COLOR;
+}
+
 // Choose function to use based on lineType
 //void drawBlock(block Block, int index, int top, int left, int right = MAX_WIDTH, bool showText = false);
 void drawBlock(block Block, int &currTop, int &currLeft, int currRight);
@@ -113,13 +130,16 @@ void generateWindowContent() {
 
 // Draw simple instruction block
 void drawSimpleBlock(block Block, int &top, int &left, int right) {
+    int originalColor = getcolor();
+    setcolor(getBlockColor(Block.lineType));
     int blockSize = textheight(Block.rawLine);
     int bottom = top + blockSize;
-    cout << "!" << bottom;
+    printf("!%d\n", bottom);
     line(left, bottom + SPACE_UNDER_TEXT, right, bottom + SPACE_UNDER_TEXT);
     outtextxy((left + right)/2, bottom, Block.rawLine);
-    cout << "showing text at: " << bottom;
+    printf("showing text at %d\n", bottom);
     top = bottom + SPACE_UNDER_TEXT;
+    setcolor(originalColor);
 }
 
 
@@ -176,6 +196,42 @@ void drawIfBlock(block Block, int top, int left, int blockSize = 200, bool showT
 
 // --- For, while, do while (<=> repeat until !) ---
 
+// Draw for loop in NS diagram
+//void drawForLoop(char *condition, char *codeBlock, int top, int left, int blockSize = 200) {
+// Takes lineType = 6
+/*void drawForLoop(block Block, int top, int left, int blockSize = 200, bool showText = false, int right = MAX_WIDTH) {
+    char* condition = Block.rawInstruction;
+    int bottom = top + blockSize;
+    rectangle(left, top, right, bottom);
+    int center = (left+right)/2;
+    outtextxy(center, top + textheight(condition), condition);
+    // Code block coords:
+    int codeBlockTop = top + textheight(condition),
+        codeBlockBottom = bottom - textheight(condition),
+        codeBlockLeft = left+textheight(condition);
+    rectangle(codeBlockLeft, codeBlockTop, right, codeBlockBottom);
+    // Put text inside code block
+    //outtextxy(codeBlockLeft + textwidth(codeBlock), codeBlockTop + textheight(codeBlock), codeBlock);
+    if (showText) showCodeFromBlock(Block, left, codeBlockTop, left+textheight(condition));
+}*/
+
+int drawForLoop(block Block, int& top, int& left, int right) {
+    int blockHeight = getBlockSize(Block);
+    int bottom = top + blockHeight;
+    int originalColor = getcolor();
+    setcolor(getBlockColor(Block.lineType));
+    printf("drawing for: bottom is %d\n", bottom);
+
+    rectangle(left, top, right, bottom);
+    top += textheight(Block.rawLine) + SPACE_UNDER_TEXT;
+    left += textheight(Block.rawLine);
+    bottom -= textheight(Block.rawLine) + SPACE_UNDER_TEXT;
+    rectangle(left, top, right, bottom);
+    outtextxy((left + right) / 2, top - SPACE_UNDER_TEXT, Block.rawInstruction);
+    setcolor(originalColor);
+    return bottom;
+}
+
 // Draw loop with initial test (eg. while) in NS diagram
 /*
 void drawLoopTestBefore(block Block, int top, int left, int blockSize = 200, bool showText = false, int right = MAX_WIDTH) {
@@ -188,6 +244,24 @@ void drawLoopTestBefore(block Block, int top, int left, int blockSize = 200, boo
     if (showText) showCodeFromBlock(Block, left, top + textheight(condition), left + textheight(condition));
 }
 */
+
+void drawLoopTestBefore(block Block, int &top, int &left, int right) {
+    int blockHeight = getBlockSize(Block);
+    int bottom = top + blockHeight;
+    int originalColor = getcolor();
+    setcolor(getBlockColor(Block.lineType));
+    printf("drawing while: bottom is %d\n", bottom);
+    rectangle(left, top, right, bottom);
+
+    int middle = (left + right) / 2;
+    outtextxy(middle, top + textheight(Block.rawInstruction), Block.rawInstruction);
+
+    left += textheight(Block.rawInstruction);
+    top += textheight(Block.rawInstruction) + SPACE_UNDER_TEXT;
+
+    rectangle(left, top, right, bottom);
+    setcolor(originalColor);
+}
 
 // Draw loop with final test(eg do while) in NS diagram
 // Takes lineType = 4
@@ -211,35 +285,16 @@ void drawLoopTestBefore(block Block, int top, int left, int blockSize = 200, boo
     //setcolor(15);
 }*/
 
-// Draw for loop in NS diagram
-//void drawForLoop(char *condition, char *codeBlock, int top, int left, int blockSize = 200) {
-// Takes lineType = 6
-/*void drawForLoop(block Block, int top, int left, int blockSize = 200, bool showText = false, int right = MAX_WIDTH) {
-    char* condition = Block.rawInstruction;
-    int bottom = top + blockSize;
-    rectangle(left, top, right, bottom);
-    int center = (left+right)/2;
-    outtextxy(center, top + textheight(condition), condition);
-    // Code block coords:
-    int codeBlockTop = top + textheight(condition),
-        codeBlockBottom = bottom - textheight(condition),
-        codeBlockLeft = left+textheight(condition);
-    rectangle(codeBlockLeft, codeBlockTop, right, codeBlockBottom);
-    // Put text inside code block
-    //outtextxy(codeBlockLeft + textwidth(codeBlock), codeBlockTop + textheight(codeBlock), codeBlock);
-    if (showText) showCodeFromBlock(Block, left, codeBlockTop, left+textheight(condition));
-}*/
-
-int drawForLoop(block Block, int& top, int& left, int right) {
+int drawLoopTestAfter(block Block, int& top, int& left, int right) {
     int blockHeight = getBlockSize(Block);
     int bottom = top + blockHeight;
 
-    rectangle(left, top, right, bottom);
-    top += textheight(Block.rawLine) + SPACE_UNDER_TEXT;
     left += textheight(Block.rawLine);
-    bottom -= textheight(Block.rawLine) + SPACE_UNDER_TEXT;
-    rectangle(left, top, right, bottom);
-    outtextxy((left + right) / 2, top - SPACE_UNDER_TEXT, Block.rawInstruction);
+    rectangle(left, top, right, bottom); cout << "am desenat\n";
+    left -= textheight(Block.rawLine);
+    bottom += textheight(Block.rawLine) + SPACE_UNDER_TEXT;
+    rectangle(left, top, right, bottom); cout << "am desenat din nou\n";
+
     return bottom;
 }
 
@@ -254,6 +309,7 @@ void drawDiagramBorder() {
 }
 
 // Get child coordinates
+/*
 void getChildCoords(block Block, int &top, int &left, int &right, int blockSize) {
     char *condition = Block.rawInstruction;
     right = MAX_WIDTH;
@@ -282,128 +338,7 @@ void getChildCoords(block Block, int &top, int &left, int &right, int blockSize)
         top += textheight(condition);
     }
 }
-
-
-// Create diagram block by block
-/*void createDiagram(blockChain blockVector) {
-    // Merg prin blocuri, tin cont de prioritati
-    // adaug blockSize la X pentru fiecare prioritate crescuta (>)
-    // si scad blockSize din X pentru fiecare prioritate scazuta (<)
-    // incepand de la x=0;
-
-
-    //drawSimpleBlock(blockVector.Block[1], 100, 100);
-    //drawLoopTestAfter(blockVector.Block[8], 600, 100, 200, true);
-    //drawIfStartBlock("xxxx", 300, 100, 150);
-    //drawForLoop(blockVector.Block[16], 300, 100);
-    //drawLoopTestBefore(blockVector.Block[2], 500, 100);
-    //drawIfBlock(blockVector.Block[6], 100, 100);
-    //drawBlock(blockVector.Block[6], -1, 300, 100);
-    drawDiagramBorder();
-    int diagram_bottom = MAX_HEIGHT * 0.95,
-    diagram_left = MAX_WIDTH * 0.05,
-    diagram_top = MAX_HEIGHT * 0.05,
-    diagram_right = MAX_WIDTH * 0.95;
-
-
-    int top = diagram_top, left = diagram_left;
-    int oldIfTop = 0;
-    for (int i = 1; i <= blockVector.blockCount; i++) {
-        block current = blockVector.Block[i];
-        if (visited[i]) continue;
-        printf("Creating diagram: Block i = %d with %d children\n", i, current.children.num);
-        int right = MAX_WIDTH;
-        // check if everything is a lineType 0 after this
-        bool allZeroes = true;
-        for (int k = 1; k <= current.children.num; k++) {
-            int kInd = current.children.indexes[k];
-            block kBlock = blockVector.Block[kInd];
-            if (kBlock.lineType != 0 && kBlock.lineType != 5) allZeroes = false;
-        }
-
-        // for if
-        int oldRight = right;
-
-        // treat else differently
-        int oldLeft = left;
-        int oldTop = top;
-        if (current.lineType == 2) {
-            int center = (left+right)/2;
-            left = center;
-            top = oldIfTop;
-            top += max((int)(getBlockSize(blockVector.Block[current.index-1]) / 3.5), 50);
-            //top += textheight("DOESNTMATTER");
-            printf(">> Else block at index %d, handling separately\n", current.index);
-        }
-        if (current.lineType != 2) {
-        if (!current.children.num || allZeroes) {
-            drawBlock(current, -1, top, left, right, true);
-            visited[i] = true;
-            top += getBlockSize(current);
-            printf("showing text for id %d\n", current.index);
-            continue;
-        } else {
-            drawBlock(current, -1, top, left, right, false);
-            visited[i] = true;
-            printf("NOT showing text for id %d\n", current.index);
-        }
-        }
-        int _tempTop = top, _tempLeft = left, _tempRight = right;
-        for (int j = 1; j <= current.children.num; j++) {
-            printf("Current coords: top=%d left=%d right=%d\n", _tempTop, _tempLeft, _tempRight);
-            getChildCoords(current, _tempTop, _tempLeft, _tempRight, getBlockSize(current));
-            printf("Altered coords: top=%d left=%d right=%d\n", _tempTop, _tempLeft, _tempRight);
-            int currentChildIndex = current.children.indexes[j];
-            if (visited[currentChildIndex]) continue;
-            block currentChild = blockVector.Block[currentChildIndex];
-            // daca s-a ajuns la else dau break si il tratez separat
-            if (currentChild.lineType == 2) break;
-            // check if everything is a lineType 0 after this
-            bool allZeroes = true;
-            for (int k = j + 1; k <= current.children.num; k++) {
-                int kInd = current.children.indexes[k];
-                block kBlock = blockVector.Block[kInd];
-                if (kBlock.lineType != 0 && kBlock.lineType != 5) allZeroes = false;
-            }
-            printf("Creating diagram: Block i = %d, Child j = %d, Drawable: %d, Validator: %d\n", i, currentChildIndex, isDrawableBlock(currentChild),
-                   ((j == current.children.num) || allZeroes));
-            if (!isDrawableBlock(currentChild) && currentChild.lineType != 0) continue;
-            //if (currentChild.lineType == 0) outtextxy(left, top, currentChild.rawLine);
-            drawBlock(currentChild, -1, _tempTop, _tempLeft, _tempRight, ((j == current.children.num) || allZeroes));
-            visited[currentChildIndex] = true;
-        }
-        // reset for if case
-        if (current.lineType == 1) {
-            right = oldRight;
-            oldIfTop = top;
-        }
-        top += getBlockSize(current);
-        // reset for else case
-        if (current.lineType == 2) {
-            left = oldLeft;
-            top = oldTop;
-        }
-        //if (i == 6) break;
-    }
-
-    //showCodeFromBlock(blockVector.Block[2]);
-    printf("Visited: \n");
-    for (int i = 1; i <= blockVector.blockCount; i++)
-        printf("Index: %d - Visited: %d \n", i, visited[i]);
-
-}*/
-int drawLoopTestAfter(block Block, int& top, int& left, int right) {
-    int blockHeight = getBlockSize(Block);
-    int bottom = top + blockHeight;
-
-    left += textheight(Block.rawLine);
-    rectangle(left, top, right, bottom); cout << "am desenat";
-    left -= textheight(Block.rawLine);
-    bottom += textheight(Block.rawLine) + SPACE_UNDER_TEXT;
-    rectangle(left, top, right, bottom); cout << "am desenat";
-
-    return bottom;
-}
+*/
 
 void createDiagram(blockChain blockVector) {
     int diagramLeft = MAX_WIDTH * 0.05;
@@ -415,13 +350,13 @@ void createDiagram(blockChain blockVector) {
 
     int lastPriority = -1;
 
-    int oldTop[5] = {-1,-1,-1,-1,-1};
-    int forPriority[5] = {-1,-1,-1,-1,-1};
+    int oldTop[11] = {-1};
+    int forPriority[11] = {-1};
     int last = 0;
 
     lastPriority = blockVector.Block[1].priority;
     for (int currIndex = 1; currIndex <= blockVector.blockCount; currIndex++) {
-        delay(2000);
+        delay(1000);
         if (blockVector.Block[currIndex].priority < lastPriority) {
             currLeft -= textheight(blockVector.Block[currIndex].rawLine) * (lastPriority - blockVector.Block[currIndex].priority);
         }
@@ -461,22 +396,6 @@ void createDiagram(blockChain blockVector) {
     drawDiagramBorder();
 }
 
-void drawLoopTestBefore(block Block, int &top, int &left, int right) {
-    int blockHeight = getBlockSize(Block);
-    int bottom = top + blockHeight;
-    cout << "bottom is: " << bottom;
-    rectangle(left, top, right, bottom);
-
-    int middle = (left + right) / 2;
-    outtextxy(middle, top + textheight(Block.rawInstruction), Block.rawInstruction);
-
-    left += textheight(Block.rawInstruction);
-    top += textheight(Block.rawInstruction) + SPACE_UNDER_TEXT;
-
-    rectangle(left, top, right, bottom);
-
-}
-
 
 void createWindow(blockChain blockVector) {
     initwindow(WIDTH, HEIGHT);
@@ -488,7 +407,7 @@ void createWindow(blockChain blockVector) {
 }
 void drawBlock(block Block, int &currTop, int &currLeft, int currRight) {
     if (Block.lineType == 0) drawSimpleBlock(Block, currTop, currLeft, currRight);
-    else if(Block.lineType == 6) drawLoopTestBefore(Block,currTop,currLeft,currRight);
+    else if(Block.lineType == 3) drawLoopTestBefore(Block,currTop,currLeft,currRight);
 }
 
 /*void drawBlock(block Block, int index, int top, int left, int right, bool showText) {

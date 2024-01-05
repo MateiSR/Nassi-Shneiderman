@@ -119,6 +119,28 @@ void addBlock(block newBlock)
     blockVector.Block[blockVector.blockCount]=newBlock;
     blockVector.Block[blockVector.blockCount].index = blockVector.blockCount;
 }
+
+// clean null characters (.trim())
+void cleanRawCode(char *s) {
+    if (!s) return;
+    int len = strlen(s);
+    // Trim spaces after
+    while (len > 0 && (s[len - 1] == ' ' || s[len - 1] == '\t')) { // \t == tab
+        s[--len] = '\0';
+    }
+    // Trim leading spaces
+    int start = 0;
+    while (start < len && (s[start] == ' ' || s[start] == '\t')) { // \t == tab
+        ++start;
+    }
+    // Move char[] array back
+    if (start > 0) {
+        for (int i = 0; i < len - start + 1; ++i) {
+            s[i] = s[start + i];
+        }
+    }
+}
+
 // Parcurge codul linie cu linie si stabileste tipul de statement
 void analyzeCode(FILE *fptr, char rawCode[])
 {
@@ -135,6 +157,8 @@ void analyzeCode(FILE *fptr, char rawCode[])
         //Create new block
         newBlock.lineType=getLineType(rawCode);
         strcpy(newBlock.rawLine,rawCode);
+        // clean rawCode from null characters
+        cleanRawCode(newBlock.rawLine);
         strcpy(newBlock.rawInstruction,rawInstructions);
         newBlock.rawLine[strlen(newBlock.rawLine)-1]='\0';
         newBlock.lineNum=line;
