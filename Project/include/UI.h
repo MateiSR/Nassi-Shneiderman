@@ -17,6 +17,7 @@ TODO: Fix text indent (ie. in repeat until), something to do with resolution & f
 const int WIDTH = 900, HEIGHT = 900;
 const int MAX_WIDTH = WIDTH * 0.95, MAX_HEIGHT = HEIGHT * 0.95;
 
+
 // Text sizes
 enum TEXT_SIZES {
     H1 = 6,
@@ -26,13 +27,14 @@ enum TEXT_SIZES {
 };
 
 // Choose function to use based on lineType
-void drawBlock(block Block, int index, int top, int left, int right = MAX_WIDTH, bool showText = false);
+//void drawBlock(block Block, int index, int top, int left, int right = MAX_WIDTH, bool showText = false);
+void drawBlock(block Block, int &currTop, int &currLeft, int currRight);
 
 // Block was visited and drawn
 bool visited[101] = {false};
 
 // show the code from block
-void showCodeFromBlock(block Block, int x, int y) {
+void showCodeFromBlock(block Block, int x, int y, int leftBorder) {
     FILE *in = fopen(INPUT_FILE, "r");
     goToLine(in, Block.lineNum);
     printf("Showing code from block %d\n", Block.index);
@@ -63,6 +65,7 @@ void showCodeFromBlock(block Block, int x, int y) {
                     printf("visited index %d in function showCodeFromBlock\n", index);
                 }
                 outtextxy(x + textwidth(buffer) / 2 + 50, y, buffer);
+                //line(leftBorder, y, MAX_WIDTH, y);
         }
 
     }
@@ -109,16 +112,16 @@ void generateWindowContent() {
 }
 
 // Draw simple instruction block
-void drawSimpleBlock(block Block, int top, int left) {
-    printf("Drawing simple block id=%d\n", Block.index);
-    const int blockSize = textheight(Block.rawLine),
-        bottom = top + blockSize,
-        right = MAX_WIDTH;
-    //rectangle(left, top, right, bottom);
-    //int center = (left+right)/2;
-    outtextxy(left + textwidth(Block.rawLine), bottom, Block.rawLine);
-
+void drawSimpleBlock(block Block, int &top, int &left, int right) {
+    int blockSize = textheight(Block.rawLine);
+    int bottom = top + blockSize;
+    cout << "!" << bottom;
+    line(left, bottom + SPACE_UNDER_TEXT, right, bottom + SPACE_UNDER_TEXT);
+    outtextxy((left + right)/2, bottom, Block.rawLine);
+    cout << "showing text at: " << bottom;
+    top = bottom + SPACE_UNDER_TEXT;
 }
+
 
 // Draw if block start in NS diagram
 void drawIfStartBlock(char *condition, int top, int left, int blockSize = 50) {
@@ -129,8 +132,8 @@ void drawIfStartBlock(char *condition, int top, int left, int blockSize = 50) {
     line(left, top, center, bottom);
     line(right, top, center, bottom);
 
-    outtextxy(left + textwidth("TRUE") /2, bottom, "TRUE");
-    outtextxy(right - textwidth("FALSE") / 2, bottom, "FALSE");
+    outtextxy(left + textwidth("TRUE") / 2 + 10, bottom - 10, "TRUE");
+    outtextxy(right - textwidth("FALSE") / 2 - 10, bottom - 10, "FALSE");
     outtextxy(center, top + textheight(condition), condition);
 
 }
@@ -142,7 +145,7 @@ void drawIfParallelBlock(block Block, int top, int left, int blockSize = 200, bo
     rectangle(left, top, right, bottom);
     int center = (left+right)/2;
     line(center, top, center, bottom);
-    if (showText) showCodeFromBlock(Block, left, top);
+    if (showText) showCodeFromBlock(Block, left, top,left);
     // Find next else block
     bool foundElse = false;
     int i = Block.index + 1;
@@ -150,7 +153,7 @@ void drawIfParallelBlock(block Block, int top, int left, int blockSize = 200, bo
         if (blockVector.Block[i].lineType == 2) {
             foundElse = true;
             block elseBlock = blockVector.Block[i];
-            if (showText) showCodeFromBlock(elseBlock, center, top);
+            if (showText) showCodeFromBlock(elseBlock, center, top,left);
         }
             i++;
     }
@@ -174,6 +177,7 @@ void drawIfBlock(block Block, int top, int left, int blockSize = 200, bool showT
 // --- For, while, do while (<=> repeat until !) ---
 
 // Draw loop with initial test (eg. while) in NS diagram
+/*
 void drawLoopTestBefore(block Block, int top, int left, int blockSize = 200, bool showText = false, int right = MAX_WIDTH) {
     char* condition = Block.rawInstruction;
     int bottom = top + blockSize;
@@ -181,12 +185,13 @@ void drawLoopTestBefore(block Block, int top, int left, int blockSize = 200, boo
     rectangle(left + textheight(condition), top + textheight(condition), right, bottom);
     int center = (left+right)/2;
     outtextxy(center, top + textheight(condition), condition);
-    if (showText) showCodeFromBlock(Block, left, top + textheight(condition));
+    if (showText) showCodeFromBlock(Block, left, top + textheight(condition), left + textheight(condition));
 }
+*/
 
 // Draw loop with final test(eg do while) in NS diagram
 // Takes lineType = 4
-void drawLoopTestAfter(block Block, int top, int left, int blockSize = 200, bool showText = false, int right = MAX_WIDTH) {
+/*void drawLoopTestAfter(block Block, int top, int left, int blockSize = 200, bool showText = false, int right = MAX_WIDTH) {
     //printf("----%d---%d----\n", showText, Block.lineType);
     //setcolor(4);
     // Find condition: Search for first lineType = 5
@@ -202,14 +207,14 @@ void drawLoopTestAfter(block Block, int top, int left, int blockSize = 200, bool
     rectangle(left + textheight(condition), top, right, bottom - textheight(condition));
     int center = (left+right)/2;
     outtextxy(center, bottom, condition);
-    if (showText) showCodeFromBlock(Block, left, top);
+    if (showText) showCodeFromBlock(Block, left, top, left + textheight(condition));
     //setcolor(15);
-}
+}*/
 
 // Draw for loop in NS diagram
 //void drawForLoop(char *condition, char *codeBlock, int top, int left, int blockSize = 200) {
 // Takes lineType = 6
-void drawForLoop(block Block, int top, int left, int blockSize = 200, bool showText = false, int right = MAX_WIDTH) {
+/*void drawForLoop(block Block, int top, int left, int blockSize = 200, bool showText = false, int right = MAX_WIDTH) {
     char* condition = Block.rawInstruction;
     int bottom = top + blockSize;
     rectangle(left, top, right, bottom);
@@ -222,7 +227,20 @@ void drawForLoop(block Block, int top, int left, int blockSize = 200, bool showT
     rectangle(codeBlockLeft, codeBlockTop, right, codeBlockBottom);
     // Put text inside code block
     //outtextxy(codeBlockLeft + textwidth(codeBlock), codeBlockTop + textheight(codeBlock), codeBlock);
-    if (showText) showCodeFromBlock(Block, left, codeBlockTop);
+    if (showText) showCodeFromBlock(Block, left, codeBlockTop, left+textheight(condition));
+}*/
+
+int drawForLoop(block Block, int& top, int& left, int right) {
+    int blockHeight = getBlockSize(Block);
+    int bottom = top + blockHeight;
+
+    rectangle(left, top, right, bottom);
+    top += textheight(Block.rawLine) + SPACE_UNDER_TEXT;
+    left += textheight(Block.rawLine);
+    bottom -= textheight(Block.rawLine) + SPACE_UNDER_TEXT;
+    rectangle(left, top, right, bottom);
+    outtextxy((left + right) / 2, top - SPACE_UNDER_TEXT, Block.rawInstruction);
+    return bottom;
 }
 
 // Draw main (rectangle) diagram border
@@ -267,12 +285,12 @@ void getChildCoords(block Block, int &top, int &left, int &right, int blockSize)
 
 
 // Create diagram block by block
-void createDiagram(blockChain blockVector) {
-    /* Merg prin blocuri, tin cont de prioritati
-     * adaug blockSize la X pentru fiecare prioritate crescuta (>)
-     * si scad blockSize din X pentru fiecare prioritate scazuta (<)
-     * incepand de la x=0;
-    */
+/*void createDiagram(blockChain blockVector) {
+    // Merg prin blocuri, tin cont de prioritati
+    // adaug blockSize la X pentru fiecare prioritate crescuta (>)
+    // si scad blockSize din X pentru fiecare prioritate scazuta (<)
+    // incepand de la x=0;
+
 
     //drawSimpleBlock(blockVector.Block[1], 100, 100);
     //drawLoopTestAfter(blockVector.Block[8], 600, 100, 200, true);
@@ -373,7 +391,92 @@ void createDiagram(blockChain blockVector) {
     for (int i = 1; i <= blockVector.blockCount; i++)
         printf("Index: %d - Visited: %d \n", i, visited[i]);
 
+}*/
+int drawLoopTestAfter(block Block, int& top, int& left, int right) {
+    int blockHeight = getBlockSize(Block);
+    int bottom = top + blockHeight;
+
+    left += textheight(Block.rawLine);
+    rectangle(left, top, right, bottom); cout << "am desenat";
+    left -= textheight(Block.rawLine);
+    bottom += textheight(Block.rawLine) + SPACE_UNDER_TEXT;
+    rectangle(left, top, right, bottom); cout << "am desenat";
+
+    return bottom;
 }
+
+void createDiagram(blockChain blockVector) {
+    int diagramLeft = MAX_WIDTH * 0.05;
+    int diagramRight = MAX_WIDTH * 0.95;
+
+    int currLeft = diagramLeft, currTop = MAX_HEIGHT * 0.05;
+    int currRight = MAX_WIDTH;
+    int currBottom;
+
+    int lastPriority = -1;
+
+    int oldTop[5] = {-1,-1,-1,-1,-1};
+    int forPriority[5] = {-1,-1,-1,-1,-1};
+    int last = 0;
+
+    lastPriority = blockVector.Block[1].priority;
+    for (int currIndex = 1; currIndex <= blockVector.blockCount; currIndex++) {
+        delay(2000);
+        if (blockVector.Block[currIndex].priority < lastPriority) {
+            currLeft -= textheight(blockVector.Block[currIndex].rawLine) * (lastPriority - blockVector.Block[currIndex].priority);
+        }
+        // PARTE LEGATA DE FOR-URI
+        lastPriority = blockVector.Block[currIndex].priority;
+        // daca blocul e for, ii bagam prioritatea si valoarea top in stiva de valori
+        if (blockVector.Block[currIndex].lineType == 6 || blockVector.Block[currIndex].lineType == 4) {
+            if (blockVector.Block[currIndex].lineType == 4) oldTop[++last] = drawLoopTestAfter(blockVector.Block[currIndex], currTop, currLeft, currRight);
+            else oldTop[++last] = drawForLoop(blockVector.Block[currIndex], currTop, currLeft, currRight);
+            forPriority[last] = blockVector.Block[currIndex].priority;
+        }
+        // daca iesim din for, verificam cate for-uri s-au inchis de cand nu am mai scazut prioritatea (ex: 2 foruri se inchid simultan,
+        // va trb sa luam top-ul de la cel de-al doilea for.
+        else if (forPriority[last] >= blockVector.Block[currIndex].priority) {
+            while (forPriority[last] > blockVector.Block[currIndex].priority) {
+                oldTop[last] = -1;
+                forPriority[last] = -1;
+                last--;
+            }
+            currTop = oldTop[last] + textheight(blockVector.Block[currIndex].rawLine) + SPACE_UNDER_TEXT;
+            oldTop[last] = -1;
+            forPriority[last] = -1;
+            last--;
+        }
+
+        // PARTE LEGATA DE REPEAT UNTIL-URI
+
+        // trebuie bagat sistem similar cu for-uri : o stiva de prioritati, ceva in genul/
+        // propun sa tratam until-ul de la sfarsit ca un type 0? parca simt ca se poate face cv cu ideea asta. si doar sa afisezi la sfarsit
+        // ca e ciudat ca tu desenezi odata cu repeat-ul si trb apoi sa astepti until-ul
+        // in fine
+
+        // PARTE LEGATA DE BLOCURI SIMPLE SI WHILE-URI
+        if (blockVector.Block[currIndex].lineType!=6) drawBlock(blockVector.Block[currIndex],currTop,currLeft,currRight);
+    }
+
+    drawDiagramBorder();
+}
+
+void drawLoopTestBefore(block Block, int &top, int &left, int right) {
+    int blockHeight = getBlockSize(Block);
+    int bottom = top + blockHeight;
+    cout << "bottom is: " << bottom;
+    rectangle(left, top, right, bottom);
+
+    int middle = (left + right) / 2;
+    outtextxy(middle, top + textheight(Block.rawInstruction), Block.rawInstruction);
+
+    left += textheight(Block.rawInstruction);
+    top += textheight(Block.rawInstruction) + SPACE_UNDER_TEXT;
+
+    rectangle(left, top, right, bottom);
+
+}
+
 
 void createWindow(blockChain blockVector) {
     initwindow(WIDTH, HEIGHT);
@@ -383,11 +486,17 @@ void createWindow(blockChain blockVector) {
     getch(); // Keep window open
     closegraph();
 }
+void drawBlock(block Block, int &currTop, int &currLeft, int currRight) {
+    if (Block.lineType == 0) drawSimpleBlock(Block, currTop, currLeft, currRight);
+    else if(Block.lineType == 6) drawLoopTestBefore(Block,currTop,currLeft,currRight);
+}
 
-void drawBlock(block Block, int index, int top, int left, int right, bool showText) {
+/*void drawBlock(block Block, int index, int top, int left, int right, bool showText) {
+    delay(1000);
     if (Block.lineType == 1) drawIfBlock(Block, top, left, getBlockSize(Block), showText);
     else if (Block.lineType == 3) drawLoopTestBefore(Block, top, left, getBlockSize(Block), showText, right);
     else if (Block.lineType == 4) drawLoopTestAfter(Block, top, left, getBlockSize(Block), showText, right);
     else if (Block.lineType == 6) drawForLoop(Block, top, left, getBlockSize(Block), showText, right);
-    else if (Block.lineType == 0) drawSimpleBlock(Block, top, left);
+    else if (Block.lineType == 0) drawSimpleBlock(Block, top, left, right);
 }
+*/

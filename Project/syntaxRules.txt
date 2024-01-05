@@ -18,10 +18,11 @@ switch(x)
     case '1': ...; break;
     default: break;
 }
-/* Do While */
-do
+/* Repeat Until */
+repeat
 {
-} while ();
+}
+until ();
 /* For */
 for (;;)
 {

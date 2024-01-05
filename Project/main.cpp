@@ -43,4 +43,3 @@ void run()
     for (int i = 1; i <= blockVector.blockCount; i++)
         printf("i=%d, index=%d\n", i, blockVector.Block[i].index);
 }
-

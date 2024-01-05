@@ -1,44 +1,5 @@
-int x = 5;
-while (x>3)
-{
-    x--;
-    cout<<x;
-    functionWhile1();
-}
-if (x==3)
-{
-    x--;
-    repeat
-    {
-        cout<<x;
-        run();
-    }
-    until x==1
-}
-else
-{
-    x = 4;
-    while (x < 3)
-    {
-        x--;
-        walk();
-    }
-    x++;
-    while (x > 4)
-    {
-        true
-    }
-}
-for (int i = 1;i<3;i++)
-{
-    printf("i=%d", i);
-    cout << "Adevarat";
-    cout << "Fals";
-}
 repeat
 {
-test
-xyz
-}
-until never
-return 0;
+} 
+until (x==0);
+x--;

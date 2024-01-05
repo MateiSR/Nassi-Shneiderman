@@ -7,10 +7,13 @@ using namespace std;
 void processFile(FILE *pseudocode);
 void run();
 
+float ZOOM = 1.00;
+int SPACE_UNDER_TEXT = 5 * ZOOM;
+
 // Is drawable block
 bool isDrawableBlock(block Block) {
     const int validLineTypes[] = {1,3,4,6};
-    for (int type: validLineTypes)
+    for (int type=0;type<4;type++)
         if (Block.lineType == type) return true;
     return false;
 }
@@ -38,7 +41,7 @@ int findChildren(block Block) {
 }
 
 // Get blockSize (height) needed
-int getBlockSize(block Block) {
+/*int getBlockSize(block Block) {
     if (Block.lineType == 0) return textheight(Block.rawLine);
     FILE *in = fopen(INPUT_FILE, "r");
     goToLine(in, Block.lineNum);
@@ -56,9 +59,7 @@ int getBlockSize(block Block) {
             done = true;
         }
         y += textheight(buffer);
-
     }
-
     fclose(in);
     bool allZeroes = true;
     for (int k = 1; k <= Block.children.num; k++) {
@@ -76,7 +77,25 @@ int getBlockSize(block Block) {
         }
     return sum + instSize;
     }
+}*/
+
+int getBlockSize(block Block) {
+    int blockSize = textheight(Block.rawInstruction) + SPACE_UNDER_TEXT;
+    //blocurile de for au nevoie de spatiu suplimentar/
+    if (Block.lineType == 6) blockSize += textheight(Block.rawInstruction) + SPACE_UNDER_TEXT;
+    if (Block.lineType == 0) return blockSize + SPACE_UNDER_TEXT;
+    else {
+        int startingPriority = Block.priority;
+        for (int i = Block.index + 1; i <= blockVector.blockCount; i++) {
+            if (startingPriority >= blockVector.Block[i].priority) break;
+            if (blockVector.Block[i].lineType != 4) blockSize += textheight(Block.rawInstruction) + SPACE_UNDER_TEXT;
+            if (blockVector.Block[i].lineType == 6) blockSize += textheight(Block.rawInstruction) + SPACE_UNDER_TEXT;
+        }
+    }
+    cout << '\n' << blockSize << '\n';
+    return blockSize;
 }
+//undeva, trebuie o variabila globala la care sa adaug marimea asta ^
 
 // Ia instructiune din parantezele unui statement
 void getInstruction (char rawCodeLine[], char rawInstruction[])
@@ -90,8 +109,9 @@ void getInstruction (char rawCodeLine[], char rawInstruction[])
         return;
     }
     strcpy(rawInstruction, firstP + 1);
-    // Se elimina ultima paranteza
-    rawInstruction[strlen(rawInstruction) - 2] = '\0';
+    // Se elimina ultima paranteza si spatiile in exces.
+    char* secondP = strrchr(rawInstruction, ')');
+    *secondP = '\0';
 }
 void addBlock(block newBlock)
 {
@@ -127,15 +147,10 @@ void analyzeCode(FILE *fptr, char rawCode[])
         }
         cout<<rawCode<<' ';
     }
-
-    for (int i = 1; i <= blockVector.blockCount; i++) blockVector.Block[i].index = i;
-
-    cout<<"Number of blocks: "<<blockVector.blockCount<<'\n';
-        for(int i=1; i<=blockVector.blockCount; i++)
-        {
-            cout<< "Block number "<<i<<": "<<blockVector.Block[i].rawLine<<", of Type: "<<blockVector.Block[i].lineType<<", situated at line: "
-                <<blockVector.Block[i].lineNum<<" has priority: "<<blockVector.Block[i].priority<<" has children: "<<findChildren(blockVector.Block[i])<<'\n';
-        }
+    for (int i = 1; i <= blockVector.blockCount; i++) {
+        blockVector.Block[i].index = i;
+        cout << "block at index: " << i << " has priority: " << blockVector.Block[i].priority << " and type: "<<blockVector.Block[i].lineType << '\n';
+    }
 }
 
 void deleteAllBlocks()
