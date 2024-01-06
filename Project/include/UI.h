@@ -8,14 +8,10 @@
 #define TITLE "Diagrame Nassi-Shneiderman"
 #pragma once
 
-/*
-TODO: Dynamic blockSize by number of lines
-TODO: Fix text indent (ie. in repeat until), something to do with resolution & font size
-*/
-
 // Variables
 const int WIDTH = 900, HEIGHT = 900;
 const int MAX_WIDTH = WIDTH * 0.95, MAX_HEIGHT = HEIGHT * 0.95;
+int DIAGRAM_SIZE = 0;
 
 
 // Text sizes
@@ -114,10 +110,12 @@ void outTextMiddle(int y, char* s) {
     outtextxy(WIDTH/2, y, s);
 }
 
+const int BG_COLOR = COLOR(45,45,45);
+
 void generateWindowContent() {
 
-    setbkcolor(COLOR(45,45,45));
-    setfillstyle(SOLID_FILL, COLOR(45,45,45));
+    setbkcolor(BG_COLOR);
+    setfillstyle(SOLID_FILL, BG_COLOR);
     bar(0, 0, getmaxx(), getmaxy());  // Draw a rectangle covering background of entire window
     settextstyle(SANS_SERIF_FONT, HORIZ_DIR, H3); // Default font is too thin, use sans serif
     settextjustify(CENTER_TEXT, CENTER_TEXT);
@@ -343,11 +341,12 @@ void getChildCoords(block Block, int &top, int &left, int &right, int blockSize)
 }
 */
 
-void createDiagram(blockChain blockVector) {
+void createDiagram(blockChain blockVector, int currTop = MAX_HEIGHT * 0.05) {
+    int originTop = currTop;
     int diagramLeft = MAX_WIDTH * 0.05;
     int diagramRight = MAX_WIDTH * 0.95;
 
-    int currLeft = diagramLeft, currTop = MAX_HEIGHT * 0.05;
+    int currLeft = diagramLeft;
     int currRight = MAX_WIDTH;
     int currBottom;
 
@@ -359,7 +358,7 @@ void createDiagram(blockChain blockVector) {
 
     lastPriority = blockVector.Block[1].priority;
     for (int currIndex = 1; currIndex <= blockVector.blockCount; currIndex++) {
-        delay(1000);
+        //delay(1000);
         if (blockVector.Block[currIndex].priority < lastPriority) {
             currLeft -= textheight(blockVector.Block[currIndex].rawLine) * (lastPriority - blockVector.Block[currIndex].priority);
         }
@@ -395,19 +394,31 @@ void createDiagram(blockChain blockVector) {
         // PARTE LEGATA DE BLOCURI SIMPLE SI WHILE-URI
         if (blockVector.Block[currIndex].lineType!=6) drawBlock(blockVector.Block[currIndex],currTop,currLeft,currRight);
     }
+    DIAGRAM_SIZE = currTop - originTop;
+    printf("\nFinal top:%d, Diagram size: %d\n", currTop, DIAGRAM_SIZE);
+
+    // For scroll function, when it goes out of bounds (out of diagramBorder)
+    // Fill area above TOP border
+    setfillstyle(SOLID_FILL, BG_COLOR);
+    bar(0, 0, WIDTH, MAX_HEIGHT * 0.05);
+    // Fill area above BOTTOM border
+    bar(0, MAX_HEIGHT, WIDTH, HEIGHT);
 
     drawDiagramBorder();
+
 }
 
-
-void createWindow(blockChain blockVector) {
+/* Now done in main:run()
+void createWindow(blockChain blockVector, int top = MAX_HEIGHT * 0.05) {
     initwindow(WIDTH, HEIGHT);
     setWindowTitle(TITLE);
     generateWindowContent();
-    createDiagram(blockVector);
-    getch(); // Keep window open
-    closegraph();
+    createDiagram(blockVector, top);
+    //getch(); // Keep window open
+    //closegraph();
 }
+*/
+
 void drawBlock(block Block, int &currTop, int &currLeft, int currRight) {
     if (Block.lineType == 0) drawSimpleBlock(Block, currTop, currLeft, currRight);
     else if(Block.lineType == 3) drawLoopTestBefore(Block,currTop,currLeft,currRight);

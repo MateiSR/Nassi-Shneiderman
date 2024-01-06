@@ -177,6 +177,15 @@ void analyzeCode(FILE *fptr, char rawCode[])
     }
 }
 
+unsigned int getDiagramHeight(blockChain blockVector) {
+    unsigned int diagramHeight = 0;
+    for (int i = 1; i <= blockVector.blockCount; i++) {
+        printf("i=%d, priority = %d\n", i, blockVector.Block[i].priority);
+        //if (blockVector.Block[i].priority == 0) diagramHeight += getBlockSize(blockVector.Block[i]);
+    }
+    return diagramHeight;
+}
+
 void deleteAllBlocks()
 {
     blockVector.blockCount=0;
