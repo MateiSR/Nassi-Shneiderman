@@ -134,7 +134,7 @@ void drawSimpleBlock(block Block, int &top, int &left, int right) {
     int bottom = top + blockSize;
     printf("!%d\n", bottom);
     line(left, bottom + SPACE_UNDER_TEXT, right, bottom + SPACE_UNDER_TEXT);
-    outtextxy((left + right)/2, bottom, Block.rawLine);
+    outtextxy((left + right)/2, bottom, Block.rawInstruction);
     printf("showing text at %d\n", bottom);
     top = bottom + SPACE_UNDER_TEXT;
     setcolor(originalColor);
@@ -287,14 +287,19 @@ int drawLoopTestAfter(block Block, int& top, int& left, int right) {
     int originalColor = getcolor();
     setcolor(getBlockColor(Block.lineType));
     int blockHeight = getBlockSize(Block);
-    int bottom = top + blockHeight;
-
+    // calculam bottom pt dreptunghiul MIC!! (si leftul tot ptr ala)
+    int bottom = top + blockHeight - (textheight(Block.rawLine) + SPACE_UNDER_TEXT);
     left += textheight(Block.rawLine);
     rectangle(left, top, right, bottom); cout << "am desenat\n";
+
+    //apoi calculam bottom si left pt dreptunghiul ala mare !!
     left -= textheight(Block.rawLine);
     bottom += textheight(Block.rawLine) + SPACE_UNDER_TEXT;
     rectangle(left, top, right, bottom); cout << "am desenat din nou\n";
+
+    // si la sfarsit le ducem inapoi la valoarea de la dreptunghiul mic ca sa ramana left-ul cum trb si sa mearga si bottom.
     left += textheight(Block.rawLine);
+    bottom -= textheight(Block.rawLine) + SPACE_UNDER_TEXT;
     setcolor(originalColor);
     return bottom;
 }
@@ -352,8 +357,9 @@ void createDiagram(blockChain blockVector, int currTop = MAX_HEIGHT * 0.05) {
 
     int lastPriority = -1;
 
-    int oldTop[11] = {-1};
-    int forPriority[11] = {-1};
+    int oldTop[11] = { -1 };
+    int loopPriority[11] = { -1 };
+    int blockType[11] = { -1 };
     int last = 0;
 
     lastPriority = blockVector.Block[1].priority;
@@ -362,37 +368,38 @@ void createDiagram(blockChain blockVector, int currTop = MAX_HEIGHT * 0.05) {
         if (blockVector.Block[currIndex].priority < lastPriority) {
             currLeft -= textheight(blockVector.Block[currIndex].rawLine) * (lastPriority - blockVector.Block[currIndex].priority);
         }
-        // PARTE LEGATA DE FOR-URI
+        // PARTE LEGATA DE FOR-URI SI REPEAT UNTIL-URI
         lastPriority = blockVector.Block[currIndex].priority;
         // daca blocul e for, ii bagam prioritatea si valoarea top in stiva de valori
         if (blockVector.Block[currIndex].lineType == 6 || blockVector.Block[currIndex].lineType == 4) {
-            if (blockVector.Block[currIndex].lineType == 4) oldTop[++last] = drawLoopTestAfter(blockVector.Block[currIndex], currTop, currLeft, currRight);
-            else oldTop[++last] = drawForLoop(blockVector.Block[currIndex], currTop, currLeft, currRight);
-            forPriority[last] = blockVector.Block[currIndex].priority;
+            if (blockVector.Block[currIndex].lineType == 4) {
+                oldTop[++last] = drawLoopTestAfter(blockVector.Block[currIndex], currTop, currLeft, currRight);
+                blockType[last] = 0;
+            }
+            else {
+                oldTop[++last] = drawForLoop(blockVector.Block[currIndex], currTop, currLeft, currRight);
+                blockType[last] = 1;
+            }
+            loopPriority[last] = blockVector.Block[currIndex].priority;
         }
         // daca iesim din for, verificam cate for-uri s-au inchis de cand nu am mai scazut prioritatea (ex: 2 foruri se inchid simultan,
         // va trb sa luam top-ul de la cel de-al doilea for.
-        else if (forPriority[last] >= blockVector.Block[currIndex].priority) {
-            while (forPriority[last] > blockVector.Block[currIndex].priority) {
+        else if (loopPriority[last] >= blockVector.Block[currIndex].priority) {
+            while (loopPriority[last] > blockVector.Block[currIndex].priority) {
                 oldTop[last] = -1;
-                forPriority[last] = -1;
+                loopPriority[last] = -1;
                 last--;
             }
-            currTop = oldTop[last] + textheight(blockVector.Block[currIndex].rawLine) + SPACE_UNDER_TEXT;
+            currTop = oldTop[last] + (textheight(blockVector.Block[currIndex].rawLine) + SPACE_UNDER_TEXT) * blockType[last];
             oldTop[last] = -1;
-            forPriority[last] = -1;
+            loopPriority[last] = -1;
+            blockType[last] = -1;
             last--;
         }
 
-        // PARTE LEGATA DE REPEAT UNTIL-URI
-
-        // trebuie bagat sistem similar cu for-uri : o stiva de prioritati, ceva in genul/
-        // propun sa tratam until-ul de la sfarsit ca un type 0? parca simt ca se poate face cv cu ideea asta. si doar sa afisezi la sfarsit
-        // ca e ciudat ca tu desenezi odata cu repeat-ul si trb apoi sa astepti until-ul
-        // in fine
 
         // PARTE LEGATA DE BLOCURI SIMPLE SI WHILE-URI
-        if (blockVector.Block[currIndex].lineType!=6) drawBlock(blockVector.Block[currIndex],currTop,currLeft,currRight);
+        if (blockVector.Block[currIndex].lineType!=6 && blockVector.Block[currIndex].lineType != 4) drawBlock(blockVector.Block[currIndex],currTop,currLeft,currRight);
     }
     DIAGRAM_SIZE = currTop - originTop;
     printf("\nFinal top:%d, Diagram size: %d\n", currTop, DIAGRAM_SIZE);
@@ -420,7 +427,7 @@ void createWindow(blockChain blockVector, int top = MAX_HEIGHT * 0.05) {
 */
 
 void drawBlock(block Block, int &currTop, int &currLeft, int currRight) {
-    if (Block.lineType == 0) drawSimpleBlock(Block, currTop, currLeft, currRight);
+    if (Block.lineType == 0 || Block.lineType == 5) drawSimpleBlock(Block, currTop, currLeft, currRight);
     else if(Block.lineType == 3) drawLoopTestBefore(Block,currTop,currLeft,currRight);
 }
 

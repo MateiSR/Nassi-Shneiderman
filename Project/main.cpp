@@ -66,12 +66,12 @@ void run()
             switch (ch) {
             case 72:
                 //if (y - SCROLL_UNIT >= top_border)
-                y -= SCROLL_UNIT;
+                y += SCROLL_UNIT;
                 break;
             case 80:
                 cout << y + DIAGRAM_SIZE << '\n';
                 //if (y + SCROLL_UNIT <= bottom_border)
-                y += SCROLL_UNIT;
+                y -= SCROLL_UNIT;
                 break;
             default:
                 running = false;

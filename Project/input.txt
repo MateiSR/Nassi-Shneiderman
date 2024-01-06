@@ -1,46 +1,19 @@
-repeat
-{
-REPEAT1
-}
-until (X);
-repeat
-{
-REPEAT2
-}
-until (x > 3);
-repeat
-{
-REPEAT3
-}
-until (x > 3);
-repeat
-{
-REPEAT4
-}
-until (x > 3);
-repeat
-{
-REPEAT5
-}
-until (x > 3);
-repeat
-{
-REPEAT6
-}
-until (x > 3);
-repeat
-{
-REPEAT7
-}
-until (x > 3);
-repeat
-{
-REPEAT8
-}
-until (x > 3);
 for (int i = 1; ;)
 {
 x++;
+repeat
+{
+REPEAT1
+x++;
+repeat
+{
+REPEAT2
+x--;
+}
+until (X2);
+}
+until (X1);
+x--;
 }
 while (x < 3)
 {
