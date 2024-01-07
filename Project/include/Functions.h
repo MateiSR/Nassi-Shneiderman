@@ -78,6 +78,21 @@ int findChildren(block Block) {
     return sum + instSize;
     }
 }*/
+int getBlockSize(block Block);
+
+int getIfSize(int index) {
+    int blockCount = 1;
+    int blockSizeIf = getBlockSize(blockVector.Block[index]);
+    int blockSizeElse = 0;
+    for (int i = index; i <= blockVector.blockCount; i++) {
+        if (blockVector.Block[i].lineType == 2) {
+            blockSizeElse = getBlockSize(blockVector.Block[i]);
+        }
+    }
+    cout << '\n' << blockSizeElse << ' ' << blockSizeIf << '\n';
+    if (blockSizeElse > blockSizeIf) return (blockSizeElse);
+    else return (blockSizeIf);
+}
 
 int getBlockSize(block Block) {
     int blockSize = textheight(Block.rawInstruction) + SPACE_UNDER_TEXT;
@@ -88,8 +103,16 @@ int getBlockSize(block Block) {
         int startingPriority = Block.priority;
         for (int i = Block.index + 1; i <= blockVector.blockCount; i++) {
             if (startingPriority >= blockVector.Block[i].priority) break;
-            if (blockVector.Block[i].lineType != 4) blockSize += textheight(Block.rawInstruction) + SPACE_UNDER_TEXT;
             if (blockVector.Block[i].lineType == 6) blockSize += textheight(Block.rawInstruction) + SPACE_UNDER_TEXT;
+            if (blockVector.Block[i].lineType == 1) {
+                blockSize += getIfSize(i);
+                int ifSizePriority = blockVector.Block[i].priority;
+                i++;
+                while (ifSizePriority != blockVector.Block[i].priority && blockVector.Block[i].lineType != 2 && i<=blockVector.blockCount) {
+                    i++;
+                }
+            }
+            else if (blockVector.Block[i].lineType != 4) blockSize += textheight(Block.rawInstruction) + SPACE_UNDER_TEXT;
         }
     }
     cout << '\n' << blockSize << '\n';

@@ -50,13 +50,12 @@ void run()
     setWindowTitle(TITLE);
     generateWindowContent();
     const int SCROLL_UNIT = 25;
-
+    cout<<getBlockSize(blockVector.Block[1]);
     while (running) {
         printf("---\nCurrent top is at y=%d\n---\n", y);
         createDiagram(blockVector, y);
         // Double buffering to avoid screen tearing
         swapbuffers();
-
         char ch = getch();
         printf("got character %c - ascii: %d\n", (char)ch, ch);
         if (ch == 27 || ch == 13) running = false; // ESC KEY

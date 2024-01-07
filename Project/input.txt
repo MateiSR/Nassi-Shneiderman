@@ -1,21 +1,29 @@
-for (int i = 1; ;)
+if (x==5)
 {
-x++;
-repeat
+    cum;
+    for ( ; ; )
+    {
+        cum;
+    }
+}
+else 
 {
-REPEAT1
-x++;
-repeat
+    bruh;
+    for ( ; ; )
+    {
+        cum;
+    }
+    if (x==5)
+    {
+        cry;
+    }
+    else
+    {
+            happy;
+    }
+}
+while ( x==5)
 {
-REPEAT2
-x--;
+    babus;
 }
-until (X2);
-}
-until (X1);
-x--;
-}
-while (x < 3)
-{
-x--;
-}
+ugh;
