@@ -133,10 +133,10 @@ void drawSimpleBlock(block Block, int &top, int &left, int right) {
     int blockSize = textheight(Block.rawLine);
     int bottom = top + blockSize * zoom;
     printf("!%d\n", bottom);
-    line(left, bottom + SPACE_UNDER_TEXT, right, bottom + SPACE_UNDER_TEXT);
+    line(left, bottom + SPACE_UNDER_TEXT * zoom, right, bottom + SPACE_UNDER_TEXT);
     outtextxy((left + right)/2, bottom, Block.rawInstruction);
     printf("showing text at %d\n", bottom);
-    top = bottom + SPACE_UNDER_TEXT;
+    top = bottom + SPACE_UNDER_TEXT * zoom;
     setcolor(originalColor);
 }
 
@@ -221,13 +221,13 @@ int drawForLoop(block Block, int& top, int& left, int right) {
     printf("drawing for: bottom is %d\n", bottom);
 
     rectangle(left, top, right, bottom);
-    top += textheight(Block.rawLine) + SPACE_UNDER_TEXT;
+    top += (textheight(Block.rawLine) + SPACE_UNDER_TEXT) * zoom;
     left += textheight(Block.rawLine);
-    bottom -= textheight(Block.rawLine) + SPACE_UNDER_TEXT;
+    bottom -= (textheight(Block.rawLine) + SPACE_UNDER_TEXT) * zoom;
     rectangle(left, top, right, bottom);
     outtextxy((left + right) / 2, top - SPACE_UNDER_TEXT, Block.rawInstruction);
     setcolor(originalColor);
-    return bottom * zoom;
+    return bottom;
 }
 
 // Draw loop with initial test (eg. while) in NS diagram
@@ -288,8 +288,8 @@ int drawLoopTestAfter(block Block, int& top, int& left, int right) {
     setcolor(getBlockColor(Block.lineType));
     int blockHeight = getBlockSize(Block) * zoom;
     // calculam bottom pt dreptunghiul MIC!! (si leftul tot ptr ala)
-    int bottom = top + blockHeight - (textheight(Block.rawLine) + SPACE_UNDER_TEXT);
-    bottom *= zoom;
+    int bottom = top * zoom + blockHeight - (textheight(Block.rawLine) + SPACE_UNDER_TEXT) * zoom;
+
     left += textheight(Block.rawLine) * zoom;
     rectangle(left, top, right, bottom); cout << "am desenat\n";
 
