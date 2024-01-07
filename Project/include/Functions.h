@@ -83,7 +83,7 @@ int getBlockSize(block Block) {
     int blockSize = textheight(Block.rawInstruction) + SPACE_UNDER_TEXT;
     //blocurile de for au nevoie de spatiu suplimentar/
     if (Block.lineType == 6) blockSize += textheight(Block.rawInstruction) + SPACE_UNDER_TEXT;
-    if (Block.lineType == 0) return blockSize + SPACE_UNDER_TEXT;
+    if (Block.lineType == 0) return (blockSize + SPACE_UNDER_TEXT) * zoom;
     else {
         int startingPriority = Block.priority;
         for (int i = Block.index + 1; i <= blockVector.blockCount; i++) {
@@ -93,7 +93,7 @@ int getBlockSize(block Block) {
         }
     }
     cout << '\n' << blockSize << '\n';
-    return blockSize;
+    return blockSize * zoom;
 }
 //undeva, trebuie o variabila globala la care sa adaug marimea asta ^
 

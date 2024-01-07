@@ -214,7 +214,7 @@ void drawIfBlock(block Block, int top, int left, int blockSize = 200, bool showT
 }*/
 
 int drawForLoop(block Block, int& top, int& left, int right) {
-    int blockHeight = getBlockSize(Block);
+    int blockHeight = getBlockSize(Block) * zoom;
     int bottom = top + blockHeight;
     int originalColor = getcolor();
     setcolor(getBlockColor(Block.lineType));
@@ -227,7 +227,7 @@ int drawForLoop(block Block, int& top, int& left, int right) {
     rectangle(left, top, right, bottom);
     outtextxy((left + right) / 2, top - SPACE_UNDER_TEXT, Block.rawInstruction);
     setcolor(originalColor);
-    return bottom;
+    return bottom * zoom;
 }
 
 // Draw loop with initial test (eg. while) in NS diagram
@@ -244,7 +244,7 @@ void drawLoopTestBefore(block Block, int top, int left, int blockSize = 200, boo
 */
 
 void drawLoopTestBefore(block Block, int &top, int &left, int right) {
-    int blockHeight = getBlockSize(Block);
+    int blockHeight = getBlockSize(Block) * zoom;
     int bottom = top + blockHeight;
     int originalColor = getcolor();
     setcolor(getBlockColor(Block.lineType));
@@ -254,8 +254,8 @@ void drawLoopTestBefore(block Block, int &top, int &left, int right) {
     int middle = (left + right) / 2;
     outtextxy(middle, top + textheight(Block.rawInstruction), Block.rawInstruction);
 
-    left += textheight(Block.rawInstruction);
-    top += textheight(Block.rawInstruction) + SPACE_UNDER_TEXT;
+    left += textheight(Block.rawInstruction) * zoom;
+    top += (textheight(Block.rawInstruction) + SPACE_UNDER_TEXT) * zoom;
 
     rectangle(left, top, right, bottom);
     setcolor(originalColor);
@@ -286,20 +286,21 @@ void drawLoopTestBefore(block Block, int &top, int &left, int right) {
 int drawLoopTestAfter(block Block, int& top, int& left, int right) {
     int originalColor = getcolor();
     setcolor(getBlockColor(Block.lineType));
-    int blockHeight = getBlockSize(Block);
+    int blockHeight = getBlockSize(Block) * zoom;
     // calculam bottom pt dreptunghiul MIC!! (si leftul tot ptr ala)
     int bottom = top + blockHeight - (textheight(Block.rawLine) + SPACE_UNDER_TEXT);
-    left += textheight(Block.rawLine);
+    bottom *= zoom;
+    left += textheight(Block.rawLine) * zoom;
     rectangle(left, top, right, bottom); cout << "am desenat\n";
 
     //apoi calculam bottom si left pt dreptunghiul ala mare !!
-    left -= textheight(Block.rawLine);
-    bottom += textheight(Block.rawLine) + SPACE_UNDER_TEXT;
+    left -= textheight(Block.rawLine) * zoom;
+    bottom += (textheight(Block.rawLine) + SPACE_UNDER_TEXT) * zoom;
     rectangle(left, top, right, bottom); cout << "am desenat din nou\n";
 
     // si la sfarsit le ducem inapoi la valoarea de la dreptunghiul mic ca sa ramana left-ul cum trb si sa mearga si bottom.
     left += textheight(Block.rawLine);
-    bottom -= textheight(Block.rawLine) + SPACE_UNDER_TEXT;
+    bottom -= (textheight(Block.rawLine) + SPACE_UNDER_TEXT) * zoom;
     setcolor(originalColor);
     return bottom;
 }
@@ -346,13 +347,14 @@ void getChildCoords(block Block, int &top, int &left, int &right, int blockSize)
 }
 */
 
-void createDiagram(blockChain blockVector, int currTop = MAX_HEIGHT * 0.05) {
+void createDiagram(blockChain blockVector, int currTop = MAX_HEIGHT * 0.05, int currLeft = MAX_WIDTH * 0.05, int currRight = MAX_WIDTH) {
     int originTop = currTop;
     int diagramLeft = MAX_WIDTH * 0.05;
     int diagramRight = MAX_WIDTH * 0.95;
 
-    int currLeft = diagramLeft;
-    int currRight = MAX_WIDTH;
+
+    //int currLeft = diagramLeft; // * zoom
+    //int currRight = MAX_WIDTH; // * zoom
     int currBottom;
 
     int lastPriority = -1;
@@ -366,7 +368,9 @@ void createDiagram(blockChain blockVector, int currTop = MAX_HEIGHT * 0.05) {
     for (int currIndex = 1; currIndex <= blockVector.blockCount; currIndex++) {
         //delay(1000);
         if (blockVector.Block[currIndex].priority < lastPriority) {
+            //currLeft /= zoom;
             currLeft -= textheight(blockVector.Block[currIndex].rawLine) * (lastPriority - blockVector.Block[currIndex].priority);
+            //currLeft *= zoom;
         }
         // PARTE LEGATA DE FOR-URI SI REPEAT UNTIL-URI
         lastPriority = blockVector.Block[currIndex].priority;
@@ -391,6 +395,7 @@ void createDiagram(blockChain blockVector, int currTop = MAX_HEIGHT * 0.05) {
                 last--;
             }
             currTop = oldTop[last] + (textheight(blockVector.Block[currIndex].rawLine) + SPACE_UNDER_TEXT) * blockType[last];
+            //currTop *= zoom;
             oldTop[last] = -1;
             loopPriority[last] = -1;
             blockType[last] = -1;
@@ -410,6 +415,10 @@ void createDiagram(blockChain blockVector, int currTop = MAX_HEIGHT * 0.05) {
     bar(0, 0, WIDTH, MAX_HEIGHT * 0.05);
     // Fill area above BOTTOM border
     bar(0, MAX_HEIGHT, WIDTH, HEIGHT);
+    // Fill area between LEFT and diagram border
+    bar (0,0, MAX_WIDTH * 0.05, HEIGHT);
+    // Fill area between RIGHT and diagram border
+    bar(MAX_WIDTH, 0, WIDTH, HEIGHT);
 
     drawDiagramBorder();
 
