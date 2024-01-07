@@ -6,7 +6,7 @@ if (x==5)
         cum;
     }
 }
-else 
+else
 {
     bruh;
     for ( ; ; )
@@ -16,10 +16,13 @@ else
     if (x==5)
     {
         cry;
+        mad;
+        bad;
     }
     else
     {
             happy;
+            sad;
     }
 }
 while ( x==5)

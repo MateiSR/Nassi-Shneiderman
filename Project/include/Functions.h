@@ -81,17 +81,18 @@ int findChildren(block Block) {
 int getBlockSize(block Block);
 
 int getIfSize(int index) {
+    printf("Finding if size for block id %d\n", index);
     int blockCount = 1;
     int blockSizeIf = getBlockSize(blockVector.Block[index]);
     int blockSizeElse = 0;
     for (int i = index; i <= blockVector.blockCount; i++) {
         if (blockVector.Block[i].lineType == 2) {
             blockSizeElse = getBlockSize(blockVector.Block[i]);
+            printf("Found else for if id %d at block id %d\n", index, i);
         }
     }
-    cout << '\n' << blockSizeElse << ' ' << blockSizeIf << '\n';
-    if (blockSizeElse > blockSizeIf) return (blockSizeElse);
-    else return (blockSizeIf);
+    printf("Block size else: %d, Block size if: %d\n", blockSizeElse, blockSizeIf);
+    return max(blockSizeElse, blockSizeIf);
 }
 
 int getBlockSize(block Block) {

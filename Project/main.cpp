@@ -39,8 +39,6 @@ void processFile(FILE *pseudocode)
 
 void run()
 {
-    for (int i = 1; i <= blockVector.blockCount; i++)
-        printf("i=%d, index=%d\n", i, blockVector.Block[i].index);
     bool running = true;
     int y = MAX_HEIGHT * 0.05;
     //printf("\n\n\n%d\n\n\n", getBlockSize(blockVector.Block[1]));
@@ -50,7 +48,8 @@ void run()
     setWindowTitle(TITLE);
     generateWindowContent();
     const int SCROLL_UNIT = 25;
-    cout<<getBlockSize(blockVector.Block[1]);
+    for (int i = 1; i <= blockVector.blockCount; i++)
+        printf("i=%d, index=%d, blockSize=%d\n", i, blockVector.Block[i].index, getBlockSize(blockVector.Block[i]));
     while (running) {
         printf("---\nCurrent top is at y=%d\n---\n", y);
         createDiagram(blockVector, y);

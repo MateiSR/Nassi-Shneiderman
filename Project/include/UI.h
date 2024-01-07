@@ -338,9 +338,8 @@ void createDiagram(blockChain blockVector, int currTop = MAX_HEIGHT * 0.05) {
     int oldLeft[11] = { -1 };
     int lastIf = 0;
 
-    // iau o pauza, trebuie schimbat cum calculeaza functia de inaltime pe if
+    // trebuie schimbat cum calculeaza functia de inaltime pe if
     // if-urile si for-urile nu se plac deloc
-    // revin
 
     lastPriority = blockVector.Block[1].priority;
     for (int currIndex = 1; currIndex <= blockVector.blockCount; currIndex++) {
@@ -375,8 +374,10 @@ void createDiagram(blockChain blockVector, int currTop = MAX_HEIGHT * 0.05) {
                 }
                 currLeft = currRight;
                 currRight = oldRight[lastIf];
+                printf("if height of last if is %d, currTop=%d\n", ifHeight[lastIf], currTop);
                 currTop = currTop - ifHeight[lastIf];
                 elseHeight[lastIf] = getBlockSize(blockVector.Block[currIndex]) - (SPACE_UNDER_TEXT + textheight(blockVector.Block[currIndex].rawLine));
+
             }
         }
         if (blockVector.Block[currIndex].priority < lastPriority && !ifEnded) {
