@@ -131,7 +131,7 @@ void drawSimpleBlock(block Block, int &top, int &left, int right) {
     int originalColor = getcolor();
     setcolor(getBlockColor(Block.lineType));
     int blockSize = textheight(Block.rawLine);
-    int bottom = top + blockSize;
+    int bottom = top + blockSize * zoom;
     printf("!%d\n", bottom);
     line(left, bottom + SPACE_UNDER_TEXT, right, bottom + SPACE_UNDER_TEXT);
     outtextxy((left + right)/2, bottom, Block.rawInstruction);
@@ -215,7 +215,7 @@ void drawIfBlock(block Block, int top, int left, int blockSize = 200, bool showT
 
 int drawForLoop(block Block, int& top, int& left, int right) {
     int blockHeight = getBlockSize(Block) * zoom;
-    int bottom = top + blockHeight;
+    int bottom = top * zoom + blockHeight;
     int originalColor = getcolor();
     setcolor(getBlockColor(Block.lineType));
     printf("drawing for: bottom is %d\n", bottom);
@@ -245,7 +245,7 @@ void drawLoopTestBefore(block Block, int top, int left, int blockSize = 200, boo
 
 void drawLoopTestBefore(block Block, int &top, int &left, int right) {
     int blockHeight = getBlockSize(Block) * zoom;
-    int bottom = top + blockHeight;
+    int bottom = top * zoom + blockHeight;
     int originalColor = getcolor();
     setcolor(getBlockColor(Block.lineType));
     printf("drawing while: bottom is %d\n", bottom);
@@ -394,7 +394,7 @@ void createDiagram(blockChain blockVector, int currTop = MAX_HEIGHT * 0.05, int 
                 loopPriority[last] = -1;
                 last--;
             }
-            currTop = oldTop[last] + (textheight(blockVector.Block[currIndex].rawLine) + SPACE_UNDER_TEXT) * blockType[last];
+            currTop = oldTop[last] + (textheight(blockVector.Block[currIndex].rawLine) + SPACE_UNDER_TEXT) * blockType[last] * zoom;
             //currTop *= zoom;
             oldTop[last] = -1;
             loopPriority[last] = -1;
