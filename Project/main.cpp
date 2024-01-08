@@ -5,6 +5,8 @@
 #include <winbgim.h>
 #include <stdio.h>
 #include <string.h>
+#include <cstdlib>
+#include <windows.h>
 /* Header files */
 #include "include/UI.h"
 #include "include/Constants.h"
@@ -130,6 +132,28 @@ void run()
         }
         else if (currentPage == editorPage) {
             //
+            printf("Opening notepad\n");
+            string command = "notepad input.txt";
+                STARTUPINFO si = {};
+                PROCESS_INFORMATION pi = {};
+                 if (CreateProcess(NULL, const_cast<char*>(command.c_str()), NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
+                             WaitForSingleObject(pi.hProcess, INFINITE);
+
+                            // Close process handles
+                            CloseHandle(pi.hProcess);
+                            CloseHandle(pi.hThread);
+                            printf("Notepad has been closed\n");
+                            FILE *pseudocode = fopen(INPUT_FILE, "r");
+                            if (!pseudocode)
+                            {
+                                printf("Could not reopen input code file\n");
+                            }
+                            deleteAllBlocks();
+                            processFile(pseudocode);
+                            fclose(pseudocode);
+                            currentPage = mainPage;
+                 }
+                 else printf("Failed to create process\n");
         }
         cleardevice();
     }

@@ -1,6 +1,6 @@
 if (x==5)
 {
-    balls;
+    c;
     x++;
 }
 else
@@ -8,17 +8,18 @@ else
     cum;
     if (x==5)
     {
-        cum;
-        kanye;
+        a;
+        b;
+	notepadedit;
     }
     else
     {
-        jesus;
+        d;
     }
 }
 while (x==5)
 {
-    cum;
+    testwhile;
 }
 repeat
 {

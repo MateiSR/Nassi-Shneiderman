@@ -1,11 +1,13 @@
 # depslib dependency file v1.0
-1704731162 source:e:\coding\cpp\nassi-shneiderman\project\main.cpp
+1704736044 source:e:\coding\cpp\nassi-shneiderman\project\main.cpp
 	<iostream>
 	<stdio.h>
 	<graphics.h>
 	<winbgim.h>
 	<stdio.h>
 	<string.h>
+	<cstdlib>
+	<windows.h>
 	"include/UI.h"
 	"include/Constants.h"
 	"include/Structures.h"
