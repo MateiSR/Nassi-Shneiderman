@@ -197,7 +197,8 @@ void analyzeCode(FILE *fptr, char rawCode[])
     }
     for (int i = 1; i <= blockVector.blockCount; i++) {
         blockVector.Block[i].index = i;
-        cout << "block at index: " << i << " has priority: " << blockVector.Block[i].priority << " and type: "<<blockVector.Block[i].lineType << '\n';
+        cout << "block at index: " << i << " has priority: " << blockVector.Block[i].priority << " and type: "<<blockVector.Block[i].lineType
+                << " with text: " << blockVector.Block[i].rawLine << '\n';
     }
 }
 

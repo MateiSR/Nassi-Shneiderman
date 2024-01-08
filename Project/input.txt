@@ -1,9 +1,9 @@
 if (x==5)
 {
-    cum;
+    a;
     for ( ; ; )
     {
-        cum;
+        a;
     }
 }
 else
@@ -11,13 +11,17 @@ else
     bruh;
     for ( ; ; )
     {
-        cum;
+        a;
     }
     if (x==5)
     {
         cry;
         mad;
         bad;
+        while (a)
+        {
+        sex
+        }
     }
     else
     {
@@ -30,3 +34,11 @@ while ( x==5)
     babus;
 }
 ugh;
+if (faraelse)
+{
+nu am else
+}
+else
+{
+am else
+}

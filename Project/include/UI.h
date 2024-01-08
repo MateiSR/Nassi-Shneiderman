@@ -136,8 +136,8 @@ void drawSimpleBlock(block Block, int &top, int &left, int right) {
     line(left, bottom + SPACE_UNDER_TEXT, right, bottom + SPACE_UNDER_TEXT);
     rectangle(left, top, right, bottom + SPACE_UNDER_TEXT);
     outtextxy((left + right)/2, bottom, Block.rawInstruction);
-    printf("showing text at %d\n", bottom);
     top = bottom + SPACE_UNDER_TEXT;
+    printf("showing text: %s at %d, block id %d, y=%d\n", Block.rawInstruction, bottom, Block.index, top);
     setcolor(originalColor);
 }
 
@@ -330,6 +330,7 @@ void createDiagram(blockChain blockVector, int currTop = MAX_HEIGHT * 0.05) {
 
     bool inIf = false;
     bool ifEnded = false;
+    //bool elseEnded = false;
 
     int oldRight[11] = { -1 };
     int ifPriority[11] = { -1 };
@@ -346,7 +347,7 @@ void createDiagram(blockChain blockVector, int currTop = MAX_HEIGHT * 0.05) {
         //delay(1000);
         if ((blockVector.Block[currIndex].priority <= ifPriority[lastIf]) && inIf) {
             ifEnded = true;
-            if (blockVector.Block[currIndex].lineType != 2) {
+            if (blockVector.Block[currIndex].lineType != 2) { // nu e niciun else
                 inIf = false;
                 while (ifPriority[lastIf] > blockVector.Block[currIndex].priority) {
                     oldRight[lastIf] = -1;
@@ -366,7 +367,7 @@ void createDiagram(blockChain blockVector, int currTop = MAX_HEIGHT * 0.05) {
                 elseHeight[lastIf] = -1;
                 lastIf--;
             }
-            else {
+            else { // este un else pt if-ul curent
                 while (ifPriority[lastIf] > blockVector.Block[currIndex].priority) {
                     oldRight[lastIf] = -1;
                     ifPriority[lastIf] = -1;
@@ -377,11 +378,17 @@ void createDiagram(blockChain blockVector, int currTop = MAX_HEIGHT * 0.05) {
                 printf("if height of last if is %d, currTop=%d\n", ifHeight[lastIf], currTop);
                 currTop = currTop - ifHeight[lastIf];
                 elseHeight[lastIf] = getBlockSize(blockVector.Block[currIndex]) - (SPACE_UNDER_TEXT + textheight(blockVector.Block[currIndex].rawLine));
-
+                // elseEnded, top -= elseHeight[lastIf], top += max(elseHeight, ifHeight)
             }
         }
         if (blockVector.Block[currIndex].priority < lastPriority && !ifEnded) {
             currLeft -= textheight(blockVector.Block[currIndex].rawLine) * (lastPriority - blockVector.Block[currIndex].priority);
+        }
+        // daca ultimul statement a fost else, inIf = false si current
+        //if (blockVector.Block[currIndex - 1].lineType == 2) elseEnded = true;
+        if (blockVector.Block[currIndex].priority < lastPriority && ifEnded) {
+            currTop -= elseHeight[lastIf];
+            currTop += max(elseHeight[lastIf], ifHeight[lastIf]);
         }
         ifEnded = false;
         if (blockVector.Block[currIndex].lineType == 1)
@@ -408,13 +415,19 @@ void createDiagram(blockChain blockVector, int currTop = MAX_HEIGHT * 0.05) {
         }
         // daca iesim din for, verificam cate for-uri s-au inchis de cand nu am mai scazut prioritatea (ex: 2 foruri se inchid simultan,
         // va trb sa luam top-ul de la cel de-al doilea for.
-        else if (loopPriority[lastLoop] >= blockVector.Block[currIndex].priority) {
+    else if (loopPriority[lastLoop] >= blockVector.Block[currIndex].priority) {
             while (loopPriority[lastLoop] > blockVector.Block[currIndex].priority && lastLoop > 1) {
                 oldTop[lastLoop] = -1;
                 loopPriority[lastLoop] = -1;
                 lastLoop--;
             }
-            currTop = oldTop[lastLoop] + (textheight(blockVector.Block[currIndex].rawLine) + SPACE_UNDER_TEXT) * blockType[lastLoop];
+            if (blockVector.Block[currIndex].lineType != 2) {
+                currTop = oldTop[lastLoop] + (textheight(blockVector.Block[currIndex].rawLine) + SPACE_UNDER_TEXT) * blockType[lastLoop];
+            }
+            else{
+                //daca un for e ultima chestie dintr-un if, atunci nu actualizam top-ul ca deobicei.
+                currTop += textheight(blockVector.Block[currIndex].rawLine) + SPACE_UNDER_TEXT;
+            }
             oldTop[lastLoop] = -1;
             loopPriority[lastLoop] = -1;
             blockType[lastLoop] = -1;
