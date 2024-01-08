@@ -1,44 +1,21 @@
 if (x==5)
 {
-    a;
-    for ( ; ; )
-    {
-        a;
-    }
+    balls;
 }
 else
+{
+    yah;
+}
+for ( int i = 5; i<=7; i++)
 {
     bruh;
-    for ( ; ; )
-    {
-        a;
-    }
-    if (x==5)
-    {
-        cry;
-        mad;
-        bad;
-        while (a)
-        {
-        sex
-        }
-    }
-    else
-    {
-            happy;
-            sad;
-    }
 }
-while ( x==5)
+while (x==5)
 {
-    babus;
+    cum;
 }
-ugh;
-if (faraelse)
+repeat
 {
-nu am else
+    bruh;
 }
-else
-{
-am else
-}
+until (x==5);
