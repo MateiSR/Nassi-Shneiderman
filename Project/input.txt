@@ -1,21 +1,22 @@
 if (x==5)
 {
     balls;
+    x++;
 }
 else
 {
-    yah;
-}
-for ( int i = 5; i<=7; i++)
-{
-    bruh;
+    cum;
+    if (x==5)
+    {
+        cum;
+        kanye;
+    }
+    else
+    {
+        jesus;
+    }
 }
 while (x==5)
 {
     cum;
 }
-repeat
-{
-    bruh;
-}
-until (x==5);

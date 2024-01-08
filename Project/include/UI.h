@@ -290,7 +290,6 @@ void createDiagram(blockChain blockVector, int currTop = MAX_HEIGHT * 0.05) {
     int elseHeight[11] = { -1 };
     int oldLeft[11] = { -1 };
     int lastIf = 0;
-    int help = 0;
 
     setcolor(0);
 
@@ -303,8 +302,6 @@ void createDiagram(blockChain blockVector, int currTop = MAX_HEIGHT * 0.05) {
         if ((blockVector.Block[currIndex].priority <= ifPriority[lastIf]) && inIf) {
             ifEnded = true;
             if (blockVector.Block[currIndex].lineType != 2) { // nu e niciun else
-                help = lastIf;
-                inIf = false;
                 while (ifPriority[lastIf] > blockVector.Block[currIndex].priority) {
                     oldRight[lastIf] = -1;
                     ifPriority[lastIf] = -1;
@@ -322,6 +319,9 @@ void createDiagram(blockChain blockVector, int currTop = MAX_HEIGHT * 0.05) {
                 ifHeight[lastIf] = -1;
                 elseHeight[lastIf] = -1;
                 lastIf--;
+                if (lastIf == 0) {
+                    inIf = false;
+                }
             }
             else { // este un else pt if-ul curent
                 while (ifPriority[lastIf] > blockVector.Block[currIndex].priority) {
@@ -337,15 +337,15 @@ void createDiagram(blockChain blockVector, int currTop = MAX_HEIGHT * 0.05) {
                 // elseEnded, top -= elseHeight[lastIf], top += max(elseHeight, ifHeight)
             }
         }
+        cout << '\n' << ifEnded << " : ifEnded " << inIf << " : inIf " << currIndex << ":index"<<'\n';
         if (blockVector.Block[currIndex].priority < lastPriority && !ifEnded) {
             currLeft -= textheight(blockVector.Block[currIndex].rawLine) * (lastPriority - blockVector.Block[currIndex].priority);
         }
         // daca ultimul statement a fost else, inIf = false si current
         // if (blockVector.Block[currIndex - 1].lineType == 2) elseEnded = true;
         if (blockVector.Block[currIndex].priority < lastPriority && ifEnded) {
-            cout << "help: " << help << " lastIf: " << lastIf << "elseHeight: " << elseHeight[lastIf] << "ifHeight: " << elseHeight[lastIf];
-            currTop -= elseHeight[help];
-            currTop += max(elseHeight[help], ifHeight[help]);
+            currTop -= elseHeight[lastIf];
+            currTop += max(elseHeight[lastIf], ifHeight[lastIf]);
         }
         ifEnded = false;
         if (blockVector.Block[currIndex].lineType == 1)
