@@ -96,6 +96,7 @@ int getIfSize(int index) {
 }
 
 int getBlockSize(block Block) {
+    if (Block.lineType == invalidStatement) return 100;
     int blockSize = textheight(Block.rawInstruction) + SPACE_UNDER_TEXT;
     //blocurile de for au nevoie de spatiu suplimentar/
     if (Block.lineType == 6) blockSize += textheight(Block.rawInstruction) + SPACE_UNDER_TEXT;

@@ -286,9 +286,77 @@ void drawLoopTestAfterRectangle(block Block, int top, int left, int right) {
 
 
 void runMainMenu() {
+    setcolor(WHITE);
     generateWindowContent(MAIN_MENU_COLOR);
     outTextMiddle(HEIGHT / 6, "Generator de diagrame Nassi-Schneiderman");
     drawButtons(buttonList, buttonCount, mainPage);
+}
+
+void showCodeNewLine(int x, int y, char s[][101], int &textwidthmax) {
+    for (int i = 0; s[i][0]; i++) {
+        outtextxy(x, y, s[i]);
+        y += textheight(s[i]) + SPACE_UNDER_TEXT;
+        textwidthmax = max(textwidthmax, textwidth(s[i]));
+    }
+}
+
+void runSyntaxRulesPage() {
+    setcolor(WHITE);
+    generateWindowContent(MAIN_MENU_COLOR);
+    outTextMiddle(HEIGHT / 6, "Reguli de sintaxa");
+    line(0, HEIGHT/5, WIDTH, HEIGHT/5);
+    //drawButtons(buttonList, buttonCount, syntaxRulesPage);
+    /* IF/else
+    While
+    Repeat until
+    For
+    Simple block*/
+    int textwidthMax = 0;
+    block newBlock;
+    newBlock.lineType = invalidStatement;
+    strcpy(newBlock.rawInstruction, "TEST");
+    strcpy(newBlock.rawLine,"TEST");
+    int x,y,temp;
+    const int SPACER = 25;
+    char ifExample[][101] = {"if (expresie)", "{", "TRUE", "}", "else", "{", "FALSE", "}", "\0"};
+    x = 100; y = 300;
+    showCodeNewLine(x, y, ifExample, textwidthMax);
+    x+= textwidthMax + SPACER;
+    temp = x + 250;
+    setcolor(BLACK);
+    drawIf(newBlock, y, x, temp);
+    setcolor(WHITE);
+    setbkcolor(MAIN_MENU_COLOR);
+    char whileExample[][101] = {"while (expresie)", "{", "LOOP", "}", "\0"};
+    x = 600; y = 300;
+    textwidthMax = 0;
+    showCodeNewLine(x, y, whileExample, textwidthMax);
+    x += textwidthMax + SPACER;
+    temp = x + 250;
+    setcolor(BLACK);
+    drawLoopTestBefore(newBlock, y, x, temp);
+    setcolor(WHITE);
+    setbkcolor(MAIN_MENU_COLOR);
+    char repeatUntilExample[][101] = {"repeat", "{", "LOOP", "}", "until (expresie)", "\0"};
+    x = 100; y = 600;
+    textwidthMax = 0;
+    showCodeNewLine(x, y, repeatUntilExample, textwidthMax);
+    x += textwidthMax + SPACER;
+    temp = x + 250;
+    setcolor(BLACK);
+    drawLoopTestAfter(newBlock, y, x, temp);
+    setcolor(WHITE);
+    setbkcolor(MAIN_MENU_COLOR);
+    char forExample[][101] = {"for (;;)", "{", "LOOP", "}", "\0"};
+    x = 600; y = 600;
+    textwidthMax = 0;
+    showCodeNewLine(x, y, forExample, textwidthMax);
+    x += textwidthMax + SPACER;
+    temp = x + 250;
+    setcolor(BLACK);
+    drawForLoop(newBlock, y, x, temp);
+    setcolor(WHITE);
+
 }
 
 

@@ -122,6 +122,11 @@ void run()
         }
         else if (currentPage == syntaxRulesPage) {
             //
+            runSyntaxRulesPage();
+            swapbuffers();
+            ch = getch();
+            printf("got character %c - ascii: %d\n", (char)ch, ch);
+            if (ch == 27 || ch == 13) currentPage = mainPage; //running = false; // Esc button to exit
         }
         else if (currentPage == editorPage) {
             //

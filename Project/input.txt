@@ -20,3 +20,8 @@ while (x==5)
 {
     cum;
 }
+repeat
+{
+test
+}
+until (x);
