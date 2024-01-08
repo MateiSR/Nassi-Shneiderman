@@ -215,3 +215,20 @@ void deleteAllBlocks()
 {
     blockVector.blockCount=0;
 }
+
+void addButton(int x, int y, int width, int height, char* label, enum pages page) {
+    buttonCount++;
+    buttonList[buttonCount].x = x;
+    buttonList[buttonCount].y = y;
+    buttonList[buttonCount].width = width;
+    buttonList[buttonCount].height = height;
+    buttonList[buttonCount].label = label;
+    buttonList[buttonCount].page = page;
+}
+
+void addButtons () {
+    addButton(WIDTH / 2, HEIGHT / 3, WIDTH / 4, HEIGHT / 9, "Create diagram", mainPage);
+    addButton(WIDTH / 1.1, HEIGHT / 8, WIDTH / 12, HEIGHT / 9, "Exit", mainPage);
+    addButton(WIDTH / 2, HEIGHT / 2, WIDTH /4 , HEIGHT / 9, "Syntax rules", mainPage);
+    addButton(WIDTH / 2, HEIGHT / 1.5, WIDTH / 4, HEIGHT / 9, "Edit diagram", mainPage);
+}

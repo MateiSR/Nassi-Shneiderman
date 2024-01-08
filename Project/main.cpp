@@ -22,10 +22,14 @@ int main()
         return -1;
     }
 
+    // Create predefined buttons
+    addButtons();
+
     // Process input file
     processFile(pseudocode);
     fclose(pseudocode);
 
+    //runMainMenu();
     run();
 
     return 0;
@@ -47,18 +51,21 @@ void run()
     initwindow(WIDTH, HEIGHT);
     setWindowTitle(TITLE);
     generateWindowContent();
+    enum pages currentPage = mainPage;
     const int SCROLL_UNIT = 25;
     for (int i = 1; i <= blockVector.blockCount; i++)
         printf("i=%d, index=%d, blockSize=%d\n", i, blockVector.Block[i].index, getBlockSize(blockVector.Block[i]));
+    char ch;
     while (running) {
+        if (currentPage == diagramPage) {
         printf("---\nCurrent top is at y=%d\n---\n", y);
         generateWindowContent();
         createDiagram(blockVector, y);
         // Double buffering to avoid screen tearing
         swapbuffers();
-        char ch = getch();
+        ch = getch();
         printf("got character %c - ascii: %d\n", (char)ch, ch);
-        if (ch == 27 || ch == 13) running = false; // ESC KEY
+        if (ch == 27 || ch == 13) currentPage = mainPage; //running = false; // Esc button to exit
         else {
             ch = getch();
             printf("got 2nd character %c - ascii: %d\n", (char)ch, ch);
@@ -76,6 +83,48 @@ void run()
                 running = false;
                 break;
             }
+        }
+        }
+        else if (currentPage == mainPage) {
+                runMainMenu();
+                //if (ch == 27 || ch == 13) running = false;
+                swapbuffers();
+                if (ismouseclick(WM_LBUTTONDOWN)) { // Handle mouse input;
+                    int mouseX, mouseY;
+                    getmouseclick(WM_LBUTTONDOWN, mouseX, mouseY);
+                    printf("Got mouse click at x=%d, y=%d\n", mouseX, mouseY);
+                    for (int currBtn = 1; currBtn <= buttonCount; currBtn++) {
+                        button btn = buttonList[currBtn];
+                        if (buttonList[currBtn].page == currentPage && isInsideButton(mouseX, mouseY,
+                                btn.x - btn.width / 2, btn.y - btn.height / 2, btn.width, btn.height))
+                                    if (currBtn == 1) {
+                                    printf("-------Running diagram generation------\n\n");
+                                    currentPage = diagramPage;
+                                    }
+                                    else if (currBtn == 2) {
+                                        printf("-------Exiting due to button press------\n\n");
+                                        running = false;
+                                        break;
+                                        exit(0);
+                                    }
+                                    else if (currBtn == 3) {
+                                        printf("-------Running: Syntax rules------\n\n");
+                                        currentPage = syntaxRulesPage;
+                                    }
+                                    else if (currBtn == 4) {
+                                        printf("-------Running: Diagram editor------\n\n");
+                                        currentPage = editorPage;
+                                    }
+
+                    }
+                }
+                delay(10);
+        }
+        else if (currentPage == syntaxRulesPage) {
+            //
+        }
+        else if (currentPage == editorPage) {
+            //
         }
         cleardevice();
     }

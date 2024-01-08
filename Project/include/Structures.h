@@ -1,5 +1,11 @@
 #pragma once
 
+
+// Variables
+const int WIDTH = 1200, HEIGHT = 900;
+const int MAX_WIDTH = WIDTH * 0.95, MAX_HEIGHT = HEIGHT * 0.95;
+int DIAGRAM_SIZE = 0;
+
 // Tipuri de statement-uri posibile in pseudocod
 enum LineType
 {
@@ -14,6 +20,22 @@ enum LineType
     braceBeggining = 7,
     braceEnd = 8
 } ;
+
+enum pages {
+    mainPage = 0,
+    diagramPage = 1,
+    syntaxRulesPage = 2,
+    editorPage = 3
+};
+
+// Button struct
+struct button {
+    int x, y;
+    int width, height;
+    char *label;
+    enum pages page;
+} buttonList[11];
+int buttonCount = 0;
 
 // Obtine tipul liniei curente
 LineType getLineType(char codeLine[])

@@ -8,11 +8,6 @@
 #define TITLE "Diagrame Nassi-Shneiderman"
 #pragma once
 
-// Variables
-const int WIDTH = 1200, HEIGHT = 900;
-const int MAX_WIDTH = WIDTH * 0.95, MAX_HEIGHT = HEIGHT * 0.95;
-int DIAGRAM_SIZE = 0;
-
 
 // Text sizes
 enum TEXT_SIZES {
@@ -28,8 +23,9 @@ const int DEFAULT_COLOR = COLOR(255,255,255),
     TEST_BEFORE_COLOR = COLOR(255,255,200),
     TEST_AFTER_COLOR = COLOR(200,200,0),
     FOR_COLOR = COLOR(173,216,230),
-    SIMPLE_COLOR = COLOR(200,200,200);
-const int BG_COLOR = 10;
+    SIMPLE_COLOR = COLOR(200,200,200),
+    BG_COLOR = 10,
+    MAIN_MENU_COLOR = COLOR(51,136,255);
 
 const int getBlockColor(int lineType) {
     if (lineType == 0) return SIMPLE_COLOR;
@@ -111,11 +107,35 @@ void outTextMiddle(int y, char* s) {
     outtextxy(WIDTH/2, y, s);
 }
 
+void drawButton(int x, int y, int width, int height, char *label) {
+    setfillstyle(SOLID_FILL, BLACK);
+    setbkcolor(BLACK);
+    bar (x, y, x + width, y + height);
+    rectangle(x, y, x + width, y + height);
+    //outtextxy(x + width / 2 - textwidth(label), y + height / 2 - textheight(label), label);
+    outtextxy(x - textwidth(label) / 2 + width/2 ,y - textheight(label) /2 + height / 2, label);
+}
 
-void generateWindowContent() {
+bool isInsideButton(int x, int y, int buttonX, int buttonY, int buttonWidth, int buttonHeight) {
+    return (x >= buttonX && x <= buttonX + buttonWidth && y >= buttonY && y <= buttonY + buttonHeight);
+}
 
-    setbkcolor(BG_COLOR);
-    setfillstyle(SOLID_FILL, BG_COLOR);
+void drawButtons(button buttonList[101], int buttonCount, enum pages page) {
+    for (int i = 1; i <= buttonCount; i++) {
+        //printf("button id %d, type %d\n", i, buttonList[i].page);
+        if (buttonList[i].page == page) {
+            //printf("drawing button id %d\n", i);
+            button btn = buttonList[i];
+            drawButton(btn.x - btn.width / 2, btn.y - btn.height / 2, btn.width, btn.height, btn.label);
+        }
+    }
+};
+
+
+void generateWindowContent(int color = BG_COLOR) {
+
+    setbkcolor(color);
+    setfillstyle(SOLID_FILL, color);
     bar(0, 0, getmaxx(), getmaxy());  // Draw a rectangle covering background of entire window
     settextstyle(SANS_SERIF_FONT, HORIZ_DIR, H3); // Default font is too thin, use sans serif
     settextjustify(CENTER_TEXT, CENTER_TEXT);
@@ -264,6 +284,14 @@ void drawLoopTestAfterRectangle(block Block, int top, int left, int right) {
     setfillstyle(SOLID_FILL, BG_COLOR);
 }
 
+
+void runMainMenu() {
+    generateWindowContent(MAIN_MENU_COLOR);
+    outTextMiddle(HEIGHT / 6, "Generator de diagrame Nassi-Schneiderman");
+    drawButtons(buttonList, buttonCount, mainPage);
+}
+
+
 void createDiagram(blockChain blockVector, int currTop = MAX_HEIGHT * 0.05) {
     int originTop = currTop;
     int diagramLeft = MAX_WIDTH * 0.05;
@@ -409,31 +437,12 @@ void createDiagram(blockChain blockVector, int currTop = MAX_HEIGHT * 0.05) {
     bar(0, MAX_HEIGHT, WIDTH, HEIGHT);
 
     drawDiagramBorder();
+    drawButtons(buttonList, buttonCount, diagramPage);
 
 }
-
-/* Now done in main:run()
-void createWindow(blockChain blockVector, int top = MAX_HEIGHT * 0.05) {
-    initwindow(WIDTH, HEIGHT);
-    setWindowTitle(TITLE);
-    generateWindowContent();
-    createDiagram(blockVector, top);
-    //getch(); // Keep window open
-    //closegraph();
-}
-*/
 
 void drawBlock(block Block, int &currTop, int &currLeft, int currRight) {
     if (Block.lineType == 0 || Block.lineType == 5) drawSimpleBlock(Block, currTop, currLeft, currRight);
     else if(Block.lineType == 3) drawLoopTestBefore(Block,currTop,currLeft,currRight);
 }
 
-/*void drawBlock(block Block, int index, int top, int left, int right, bool showText) {
-    delay(1000);
-    if (Block.lineType == 1) drawIfBlock(Block, top, left, getBlockSize(Block), showText);
-    else if (Block.lineType == 3) drawLoopTestBefore(Block, top, left, getBlockSize(Block), showText, right);
-    else if (Block.lineType == 4) drawLoopTestAfter(Block, top, left, getBlockSize(Block), showText, right);
-    else if (Block.lineType == 6) drawForLoop(Block, top, left, getBlockSize(Block), showText, right);
-    else if (Block.lineType == 0) drawSimpleBlock(Block, top, left, right);
-}
-*/
