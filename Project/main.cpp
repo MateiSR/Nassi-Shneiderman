@@ -52,6 +52,7 @@ void run()
         printf("i=%d, index=%d, blockSize=%d\n", i, blockVector.Block[i].index, getBlockSize(blockVector.Block[i]));
     while (running) {
         printf("---\nCurrent top is at y=%d\n---\n", y);
+        generateWindowContent();
         createDiagram(blockVector, y);
         // Double buffering to avoid screen tearing
         swapbuffers();
