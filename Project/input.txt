@@ -5,7 +5,7 @@ if (x==5)
 }
 else
 {
-    cum;
+    test;
     if (x==5)
     {
         a;
