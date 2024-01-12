@@ -20,6 +20,9 @@ else
 while (x==5)
 {
     testwhile;
+    test1;
+    test2;
+    test3;
 }
 repeat
 {

@@ -7,8 +7,8 @@ using namespace std;
 void processFile(FILE *pseudocode);
 void run();
 
-float ZOOM = 1.00;
-int SPACE_UNDER_TEXT = 5 * ZOOM;
+float ZOOM = 1.0;
+int SPACE_UNDER_TEXT = 5;
 
 // Is drawable block
 bool isDrawableBlock(block Block) {
@@ -96,6 +96,7 @@ int getIfSize(int index) {
 }
 
 int getBlockSize(block Block) {
+    SPACE_UNDER_TEXT = 5 * ZOOM;
     if (Block.lineType == invalidStatement) return 100;
     int blockSize = textheight(Block.rawInstruction) + SPACE_UNDER_TEXT;
     //blocurile de for au nevoie de spatiu suplimentar/

@@ -360,13 +360,15 @@ void runSyntaxRulesPage() {
 }
 
 
-void createDiagram(blockChain blockVector, int currTop = MAX_HEIGHT * 0.05) {
+void createDiagram(blockChain blockVector, int currTop = MAX_HEIGHT * 0.05, int currLeft = MAX_WIDTH * 0.05, int currRight = MAX_WIDTH * 0.95) {
     int originTop = currTop;
     int diagramLeft = MAX_WIDTH * 0.05;
     int diagramRight = MAX_WIDTH * 0.95;
 
+    /*
     int currLeft = diagramLeft;
     int currRight = diagramRight;
+    */
     int currBottom;
 
     int lastPriority = -1;
@@ -503,6 +505,10 @@ void createDiagram(blockChain blockVector, int currTop = MAX_HEIGHT * 0.05) {
     bar(0, 0, WIDTH, MAX_HEIGHT * 0.05);
     // Fill area above BOTTOM border
     bar(0, MAX_HEIGHT, WIDTH, HEIGHT);
+    // Fill area < LEFT border
+    bar(0, 0, diagramLeft, HEIGHT);
+    // Fill area > RIGHT border
+    bar (diagramRight, 0, WIDTH, HEIGHT);
 
     drawDiagramBorder();
     drawButtons(buttonList, buttonCount, diagramPage);

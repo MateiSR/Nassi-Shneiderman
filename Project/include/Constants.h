@@ -6,5 +6,7 @@
 
 extern const int SIZE_MAX_WIDTH = getmaxwidth() * 0.75;
 extern const int SIZE_MAX_HEIGHT = getmaxheight() * 0.75;
+extern const float ZOOM_INCREMENT = 0.5;
+extern const float ZOOM_DEFAULT = 1.0;
 
 #endif

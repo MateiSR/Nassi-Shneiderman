@@ -47,8 +47,11 @@ void run()
 {
     bool running = true;
     int y = MAX_HEIGHT * 0.05;
+    int left = MAX_WIDTH * 0.05, right = MAX_WIDTH * 0.95;
     //printf("\n\n\n%d\n\n\n", getBlockSize(blockVector.Block[1]));
     const int diagramHeight = getDiagramHeight(blockVector);
+    const int diagramLeft = MAX_WIDTH * 0.05;
+    const int diagramRight = MAX_WIDTH * 0.95;
     const int top_border = MAX_HEIGHT * 0.05, bottom_border = MAX_HEIGHT;
     initwindow(WIDTH, HEIGHT);
     setWindowTitle(TITLE);
@@ -61,8 +64,9 @@ void run()
     while (running) {
         if (currentPage == diagramPage) {
         printf("---\nCurrent top is at y=%d\n---\n", y);
+        printf("---\nCurrent zoom is ZOOM=%.3f\n---\n", ZOOM);
         generateWindowContent();
-        createDiagram(blockVector, y);
+        createDiagram(blockVector, y, left, right);
         // Double buffering to avoid screen tearing
         swapbuffers();
         ch = getch();
@@ -70,23 +74,35 @@ void run()
         if (ch == 27 || ch == 13) {
             currentPage = mainPage;
             y = MAX_HEIGHT * 0.05;
+            ZOOM = ZOOM_DEFAULT;
+            left = MAX_WIDTH * 0.05, right = MAX_WIDTH * 0.95;
         } //running = false; // Esc button to exit
+        else if (tolower(ch) == 'i') ZOOM += ZOOM_INCREMENT;
+        else if (tolower(ch) == 'o') {if(ZOOM > ZOOM_DEFAULT) ZOOM -= ZOOM_INCREMENT;}
         else {
             ch = getch();
             printf("got 2nd character %c - ascii: %d\n", (char)ch, ch);
             switch (ch) {
-            case 72:
+            case 72: // up
                 //if (y - SCROLL_UNIT >= top_border)
                 y += SCROLL_UNIT;
                 break;
-            case 80:
+            case 80: // down
                 cout << y + DIAGRAM_SIZE << '\n';
                 //if (y + SCROLL_UNIT <= bottom_border)
                 y -= SCROLL_UNIT;
                 break;
-            default:
-                running = false;
+            case 75: // left
+                left += SCROLL_UNIT;
+                right -= SCROLL_UNIT;
                 break;
+            case 77: // right
+                right += SCROLL_UNIT;
+                left -= SCROLL_UNIT;
+                break;
+/*            default:
+                running = false;
+                break;*/
             }
         }
         }
