@@ -74,10 +74,12 @@ void showCodeFromBlock(block Block, int x, int y, int leftBorder) {
 }
 
 
+/*
 void setWindowTitle(char* title) {
     HWND hwnd = GetFocus(); // Get the handle to the current window
     SetWindowText(hwnd, title);
 }
+*/
 
 void showCenteredText(char* text, int x, int y) {
     // Width & height of text
@@ -102,9 +104,7 @@ void drawButton(int x, int y, int width, int height, char *label) {
     setbkcolor(BLACK);
     bar (x, y, x + width, y + height);
     rectangle(x, y, x + width, y + height);
-    //outtextxy(x + width / 2 - textwidth(label), y + height / 2 - textheight(label), label);
-    outtextxy(x - textwidth(label) / 25 + width/2 ,y - textheight(label) /2 + height / 2, label);
-    //outtextxy(x - textwidth(label) , y + textheight(label) + height / 2, label);
+    outtextxy(x + width/2, y+height/2, label);
 }
 
 bool isInsideButton(int x, int y, int buttonX, int buttonY, int buttonWidth, int buttonHeight) {
@@ -279,8 +279,11 @@ void drawLoopTestAfterRectangle(block Block, int top, int left, int right) {
 void runMainMenu() {
     setcolor(WHITE);
     generateWindowContent(MAIN_MENU_COLOR);
+    settextstyle(8, HORIZ_DIR, 4);
     outTextMiddle(HEIGHT / 6, "Generator de diagrame Nassi-Schneiderman");
+    settextstyle(8, HORIZ_DIR, H3);
     drawButtons(buttonList, buttonCount, mainPage);
+    settextstyle(SANS_SERIF_FONT, HORIZ_DIR, H3);
 }
 
 void showCodeNewLine(int x, int y, char s[][101], int &textwidthmax) {
@@ -294,7 +297,9 @@ void showCodeNewLine(int x, int y, char s[][101], int &textwidthmax) {
 void runSyntaxRulesPage() {
     setcolor(WHITE);
     generateWindowContent(MAIN_MENU_COLOR);
+    settextstyle(8, HORIZ_DIR, 4);
     outTextMiddle(HEIGHT / 6, "Reguli de sintaxa");
+    settextstyle(SANS_SERIF_FONT, HORIZ_DIR, H3);
     line(0, HEIGHT/5, WIDTH, HEIGHT/5);
     //drawButtons(buttonList, buttonCount, syntaxRulesPage);
     /* IF/else
@@ -354,7 +359,9 @@ bool ADDED_COLOR_BUTTONS = false;
 void runColorPickerPage(int selectedColor, int selectdBtnId) {
     setcolor(WHITE);
     generateWindowContent(MAIN_MENU_COLOR);
+    settextstyle(8, HORIZ_DIR, 4);
     outTextMiddle(HEIGHT / 6, "Color picker");
+    settextstyle(SANS_SERIF_FONT, HORIZ_DIR, H3);
     char _tempBuffer[50];
     sprintf(_tempBuffer, "Selected color id %d for block %s", selectedColor, getColorType(selectdBtnId));
     outTextMiddle(HEIGHT / 5, _tempBuffer);

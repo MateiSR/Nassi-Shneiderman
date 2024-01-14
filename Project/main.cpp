@@ -45,6 +45,7 @@ void processFile(FILE *pseudocode)
 
 void run()
 {
+    SetWindowText(GetConsoleWindow(), TITLE);
     bool running = true;
     int selectedColor, selectedBtnId;
     int y = MAX_HEIGHT * 0.05;
@@ -54,8 +55,8 @@ void run()
     const int diagramLeft = MAX_WIDTH * 0.05;
     const int diagramRight = MAX_WIDTH * 0.95;
     const int top_border = MAX_HEIGHT * 0.05, bottom_border = MAX_HEIGHT;
-    initwindow(WIDTH, HEIGHT);
-    setWindowTitle(TITLE);
+    initwindow(WIDTH, HEIGHT, TITLE);
+//    setWindowTitle(TITLE);
     generateWindowContent();
     enum pages currentPage = mainPage;
     const int SCROLL_UNIT = 25;
