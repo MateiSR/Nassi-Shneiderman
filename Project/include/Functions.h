@@ -233,4 +233,83 @@ void addButtons () {
     addButton(WIDTH / 1.1, HEIGHT / 8, WIDTH / 12, HEIGHT / 9, "Exit", mainPage);
     addButton(WIDTH / 2, HEIGHT / 2, WIDTH /4 , HEIGHT / 9, "Syntax rules", mainPage);
     addButton(WIDTH / 2, HEIGHT / 1.5, WIDTH / 4, HEIGHT / 9, "Edit diagram", mainPage);
+    addButton(WIDTH / 2, HEIGHT / 1.2, WIDTH / 4, HEIGHT / 9, "Color picker", mainPage);
+    addButton(WIDTH / 10, HEIGHT / 1.2, WIDTH / 12 , HEIGHT / 9, "MAIN_BG", colorPickerPage);
+    addButton(WIDTH / 10 + (WIDTH / 12 + WIDTH / 20) * 1, HEIGHT / 1.2, WIDTH / 12 , HEIGHT / 9, "DIAGRAM", colorPickerPage);
+    addButton(WIDTH / 10 + (WIDTH / 12 + WIDTH / 20) * 2, HEIGHT / 1.2, WIDTH / 12 , HEIGHT / 9, "SIMPLE", colorPickerPage);
+    addButton(WIDTH / 10 + (WIDTH / 12 + WIDTH / 20) * 3, HEIGHT / 1.2, WIDTH / 12 , HEIGHT / 9, "FOR", colorPickerPage);
+    addButton(WIDTH / 10 + (WIDTH / 12 + WIDTH / 20) * 4, HEIGHT / 1.2, WIDTH / 12 , HEIGHT / 9, "WHILE", colorPickerPage);
+    addButton(WIDTH / 10 + (WIDTH / 12 + WIDTH / 20) * 5, HEIGHT / 1.2, WIDTH / 12 , HEIGHT / 9, "REPEAT", colorPickerPage);
+    addButton(WIDTH / 10 + (WIDTH / 12 + WIDTH / 20) * 6, HEIGHT / 1.2, WIDTH / 12 , HEIGHT / 9, "IF", colorPickerPage);
+    addButton(WIDTH / 1.1, HEIGHT / 8, WIDTH / 12, HEIGHT / 9, "Exit", colorPickerPage);
+    addButton(WIDTH / 3, HEIGHT / 1.05, WIDTH / 4, HEIGHT / 12, "Confirm", colorPickerPage);
+    addButton(WIDTH / 3 + WIDTH / 4 + WIDTH / 20, HEIGHT / 1.05, WIDTH / 4, HEIGHT / 12, "Reset", colorPickerPage);
+}
+
+char* getColorType(int id) {
+    switch (id) {
+    case 0:
+        return "MAIN_BG";
+        break;
+    case 1:
+        return "DIAGRAM_BG";
+        break;
+    case 2:
+        return "SIMPLE_BLOCK";
+        break;
+    case 3:
+        return "FOR_BLOCK";
+        break;
+    case 4:
+        return "WHILE_BLOCK";
+        break;
+    case 5:
+        return "REPEAT_UNTIL_BLOCK";
+        break;
+    case 6:
+        return "IF_BLOCK";
+        break;
+    default:
+        return "NONE";
+        break;
+    }
+}
+
+void resetColors() {
+    DEFAULT_COLOR = DEFAULT_COLORS.DEFAULT_COLOR;
+    IF_COLOR = DEFAULT_COLORS.IF_COLOR;
+    TEST_AFTER_COLOR = DEFAULT_COLORS.TEST_AFTER_COLOR;
+    TEST_BEFORE_COLOR = DEFAULT_COLORS.TEST_BEFORE_COLOR;
+    FOR_COLOR = DEFAULT_COLORS.FOR_COLOR;
+    SIMPLE_COLOR = DEFAULT_COLORS.SIMPLE_COLOR;
+    BG_COLOR = DEFAULT_COLORS.BG_COLOR;
+    MAIN_MENU_COLOR = DEFAULT_COLORS.MAIN_MENU_COLOR;
+}
+
+
+void changeColor(int colorIndex, int blockIndex) {
+    int color = COLOR_LIST[colorIndex];
+    switch (blockIndex) {
+    case 0:
+        MAIN_MENU_COLOR = color;
+        break;
+    case 1:
+        BG_COLOR = color;
+        break;
+    case 2:
+        SIMPLE_COLOR = color;
+        break;
+    case 3:
+        FOR_COLOR = color;
+        break;
+    case 4:
+        TEST_BEFORE_COLOR = color;
+        break;
+    case 5:
+        TEST_AFTER_COLOR = color;
+        break;
+    case 6:
+        IF_COLOR = color;
+        break;
+    }
 }

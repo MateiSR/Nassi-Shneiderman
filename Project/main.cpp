@@ -46,6 +46,7 @@ void processFile(FILE *pseudocode)
 void run()
 {
     bool running = true;
+    int selectedColor, selectedBtnId;
     int y = MAX_HEIGHT * 0.05;
     int left = MAX_WIDTH * 0.05, right = MAX_WIDTH * 0.95;
     //printf("\n\n\n%d\n\n\n", getBlockSize(blockVector.Block[1]));
@@ -136,6 +137,12 @@ void run()
                                         printf("-------Running: Diagram editor------\n\n");
                                         currentPage = editorPage;
                                     }
+                                    else if (currBtn == 5) {
+                                        printf("-------Running: Color picker page------\n\n");
+                                        selectedColor = -1;
+                                        selectedBtnId = -1;
+                                        currentPage = colorPickerPage;
+                                    }
 
                     }
                 }
@@ -173,6 +180,51 @@ void run()
                             currentPage = mainPage;
                  }
                  else printf("Failed to create process\n");
+        }
+        else if (currentPage == colorPickerPage) {
+            runColorPickerPage(selectedColor, selectedBtnId);
+            drawButtons(buttonList, buttonCount, colorPickerPage);
+            swapbuffers();
+            if (ismouseclick(WM_LBUTTONDOWN)) { // Handle mouse input;
+                    int mouseX, mouseY;
+                    int buttonsBeforeCurrPage = 16;
+                    getmouseclick(WM_LBUTTONDOWN, mouseX, mouseY);
+                    printf("Got mouse click at x=%d, y=%d\n", mouseX, mouseY);
+                    for (int currBtn = 1; currBtn <= buttonCount; currBtn++) {
+                        button btn = buttonList[currBtn];
+                        //if (buttonList[currBtn].page != currentPage) buttonsBeforeCurrPage++;
+                        if (buttonList[currBtn].page == currentPage) {
+                        if (!strlen(btn.label)) { // este culoarea selectabila
+                            if (isInsideButton(mouseX, mouseY,
+                                btn.x, btn.y, btn.width, btn.height)) {
+                            int colorIndex = currBtn - buttonsBeforeCurrPage;
+                            printf("Clicked button id %d with assigned color %d\n\n", currBtn, colorIndex);
+                            selectedColor = colorIndex;
+                        }
+                        }
+                        else
+                            if (isInsideButton(mouseX, mouseY,
+                                btn.x - btn.width / 2, btn.y - btn.height / 2, btn.width, btn.height)) {
+                                    printf("Clicked button id %d\n", currBtn);
+                                    if (strcmp(btn.label, "Confirm") == 0) {
+                                            if (selectedColor == -1 || selectedBtnId == -1) Beep(200, 200);
+                                            else {
+                                            changeColor(selectedColor, selectedBtnId);
+                                            selectedColor = selectedBtnId = -1;
+                                            }
+                                    }
+                                    else if (strcmp(btn.label, "Reset") == 0) {
+                                        resetColors();
+                                        currentPage = mainPage;
+                                    }
+                                    else selectedBtnId = currBtn - 6;
+                                    if (strcmp(btn.label, "Exit") == 0) currentPage = mainPage;
+
+                                }
+                        }
+                    }
+                }
+                delay(10);
         }
         cleardevice();
     }

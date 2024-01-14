@@ -17,16 +17,6 @@ enum TEXT_SIZES {
     P = 2,
 };
 
-// Block colors
-const int DEFAULT_COLOR = COLOR(255,255,255),
-    IF_COLOR = COLOR(255, 0, 0),
-    TEST_BEFORE_COLOR = COLOR(255,255,200),
-    TEST_AFTER_COLOR = COLOR(200,200,0),
-    FOR_COLOR = COLOR(173,216,230),
-    SIMPLE_COLOR = COLOR(200,200,200),
-    BG_COLOR = 10,
-    MAIN_MENU_COLOR = COLOR(51,136,255);
-
 const int getBlockColor(int lineType) {
     if (lineType == 0) return SIMPLE_COLOR;
     if (lineType == 1) return IF_COLOR;
@@ -113,7 +103,8 @@ void drawButton(int x, int y, int width, int height, char *label) {
     bar (x, y, x + width, y + height);
     rectangle(x, y, x + width, y + height);
     //outtextxy(x + width / 2 - textwidth(label), y + height / 2 - textheight(label), label);
-    outtextxy(x - textwidth(label) / 2 + width/2 ,y - textheight(label) /2 + height / 2, label);
+    outtextxy(x - textwidth(label) / 25 + width/2 ,y - textheight(label) /2 + height / 2, label);
+    //outtextxy(x - textwidth(label) , y + textheight(label) + height / 2, label);
 }
 
 bool isInsideButton(int x, int y, int buttonX, int buttonY, int buttonWidth, int buttonHeight) {
@@ -123,7 +114,7 @@ bool isInsideButton(int x, int y, int buttonX, int buttonY, int buttonWidth, int
 void drawButtons(button buttonList[101], int buttonCount, enum pages page) {
     for (int i = 1; i <= buttonCount; i++) {
         //printf("button id %d, type %d\n", i, buttonList[i].page);
-        if (buttonList[i].page == page) {
+        if (buttonList[i].page == page && strlen(buttonList[i].label)) {
             //printf("drawing button id %d\n", i);
             button btn = buttonList[i];
             drawButton(btn.x - btn.width / 2, btn.y - btn.height / 2, btn.width, btn.height, btn.label);
@@ -357,6 +348,34 @@ void runSyntaxRulesPage() {
     drawForLoop(newBlock, y, x, temp);
     setcolor(WHITE);
 
+}
+bool ADDED_COLOR_BUTTONS = false;
+
+void runColorPickerPage(int selectedColor, int selectdBtnId) {
+    setcolor(WHITE);
+    generateWindowContent(MAIN_MENU_COLOR);
+    outTextMiddle(HEIGHT / 6, "Color picker");
+    char _tempBuffer[50];
+    sprintf(_tempBuffer, "Selected color id %d for block %s", selectedColor, getColorType(selectdBtnId));
+    outTextMiddle(HEIGHT / 5, _tempBuffer);
+    //printf("Selected color with id %d\n", selectedColor);
+    int originLeft, originTop = HEIGHT / 4, SQUARE_WH = WIDTH / 9, DELIMITER = WIDTH / 18;
+    originLeft = WIDTH / 2 - (SQUARE_WH + DELIMITER) * 5 / 2;
+    for (int colorIndex = 0; COLOR_LIST[colorIndex] != 0; colorIndex++) {
+        //setcolor(color);
+        int color = COLOR_LIST[colorIndex];
+        setfillstyle(SOLID_FILL, color);
+        rectangle(originLeft, originTop, originLeft + SQUARE_WH, originTop + SQUARE_WH);
+        bar(originLeft, originTop, originLeft + SQUARE_WH, originTop + SQUARE_WH);
+        if (!ADDED_COLOR_BUTTONS) addButton(originLeft, originTop, SQUARE_WH, SQUARE_WH, "", colorPickerPage);
+        originLeft += SQUARE_WH + DELIMITER;
+        if ((colorIndex + 1) % 5 == 0) {
+            originLeft = WIDTH / 2 - (SQUARE_WH + DELIMITER) * 5 / 2;
+            originTop += DELIMITER + SQUARE_WH;
+        }
+    }
+    ADDED_COLOR_BUTTONS = true;
+    setfillstyle(SOLID_FILL, MAIN_MENU_COLOR);
 }
 
 

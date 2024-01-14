@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1705066228 source:e:\coding\cpp\nassi-shneiderman\project\main.cpp
+1705257317 source:e:\coding\cpp\nassi-shneiderman\project\main.cpp
 	<iostream>
 	<stdio.h>
 	<graphics.h>
@@ -13,7 +13,7 @@
 	"include/Structures.h"
 	"include/Functions.h"
 
-1705066038 e:\coding\cpp\nassi-shneiderman\project\include\ui.h
+1705257232 e:\coding\cpp\nassi-shneiderman\project\include\ui.h
 	<graphics.h>
 	<winbgim.h>
 	"Constants.h"
@@ -26,11 +26,11 @@
 	<graphics.h>
 	<winbgim.h>
 
-1705064614 e:\coding\cpp\nassi-shneiderman\project\include\structures.h
+1705257235 e:\coding\cpp\nassi-shneiderman\project\include\structures.h
 
 1702334281 e:\coding\cpp\nassi-shneiderman\project\include\files.h
 
-1705065362 e:\coding\cpp\nassi-shneiderman\project\include\functions.h
+1705257396 e:\coding\cpp\nassi-shneiderman\project\include\functions.h
 	"Structures.h"
 	<iostream>
 
